@@ -1,0 +1,56 @@
+﻿extends layout.pug
+
+block content
+  .title
+    h3 Редактирование профиля
+  #edit-panel
+    if (messages && messages.length > 0)
+      #{messages}
+    section.section-edit
+      h3.section-title Основная информация
+      form.section-form-edit(method='post', action='/user/edit/personally')
+        input(type='hidden', name='_csrf', value=decodeURIComponent(csrfToken))
+        .row
+          label(for='user[name]') Имя и фамилия
+          input.grey-input(type='text', id='user[name]', value=owner.fullName, name='user[name]')
+        .row
+          label(for='user[website]') Веб-сайт
+          input.grey-input(type='url', id='user[website]', value=owner.website, name='user[website]')
+        .row
+          label(for='user[about]') О себе
+          textarea.grey-input(id='user[about]', name='user[about]') #{owner.about}
+        .row.buttons
+          input.blue-button(type='submit', value='Сохранить')
+    section.section-edit
+      h3.section-title Фотография Вашей страницы
+      .form
+        .row(style='margin-bottom: 10px;')
+          label Текущая фотография
+          .f-left.big-profile-photo-envelope
+            a(href='/static/images/userpics/thumbs_m/' + owner.photo, title='На этой фотографии ' + owner.fullName, onclick='return dismus.profile.showPhoto(this)')
+              img#current-profile-image(src='/static/images/userpics/thumbs_m/' + owner.photo)
+            a(href='', title='На этой фотографии', onclick='return dismus.profile.showPhoto(this)')
+          .clearfix
+        .row.buttons.divider
+          button#button-change-photo.blue-button(onclick='dismus.profile.changePhoto(this)', title='Загрузка фотографии') Изменить фотографию
+    section.section-edit
+      h3.section-title Адрес Вашей электронной почты
+      form.section-form-edit(method='post', action='/user/edit/email')
+        input(type='hidden', name='_csrf', value=decodeURIComponent(csrfToken))
+        .row
+          label(for='user[email]') Текущий адрес
+          input.grey-input(type='email', id='user[email]', value=owner.email, name='user[email]')
+        .row.buttons
+          input.blue-button(type='submit', value='Сохранить email')
+    section.section-edit
+      h3.section-title Адрес Вашей страницы
+      form.section-form-edit(method='post', action='/user/edit/username')
+        input(type='hidden', name='_csrf', value=decodeURIComponent(csrfToken))
+        .row
+          label(for='user[login]') Текущий адрес
+          .labeled !{'http://realive.com/user/' + owner.userName}
+        .row
+          label(for='user[username]') Адрес страницы
+          input.grey-input(type='text', id='user[username]', value=owner.username, name='user[username]')
+        .row.buttons
+          input.blue-button(type='submit', value='Сохранить имя')

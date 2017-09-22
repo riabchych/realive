@@ -1,0 +1,60 @@
+doctype html
+html(lang='en')
+  meta(charset='utf-8')
+  meta(http-equiv='X-UA-Compatible', content='IE=edge,chrome=1')
+  title=title
+  meta(name='description', content='')
+  meta(name='author', content='Yevhenii Riabchych')
+  link(rel='shortcut icon', href='/favicon.ico')
+  link(rel='apple-touch-icon', href='/apple-touch-icon.png')
+
+  block stylesheets
+    link(rel='stylesheet', href='/stylesheets/reset.min.css')
+    link(rel='stylesheet', href='/stylesheets/style.min.css')
+
+  block scripts
+    script(src='/javascripts/jquery-3.1.1.js')
+    script(src='/javascripts/lazyload-min.js')
+    script(src='/javascripts/core.js')
+
+  body
+    #page-header
+      .container.page-top-navigation
+        nav.f-left
+          if (owner && owner.userName)
+            a(href='/user/' + owner.userName) Профиль
+            a(href='/') Отзывы
+            a(href='/') Комментарии
+            a(href='/feed') Новости
+          else
+            a(href='/') Главная
+        nav#menu.f-right
+          if (owner && owner.userName) 
+            .dropdown
+              a.dropdown-toggle(onclick="profileMenu(this)", role='button', data-toggle='dropdown') #{owner.fullName}
+                b.caret
+              ul#profile-menu.dropdown-menu(role='menu', aria-labelledby='drop3')
+                li
+                  a(tabindex='-1', href='/user/' + owner.userName) Профиль
+                li
+                  a(tabindex='-1', href='/user/edit') Редактировать
+                li.divider
+                li
+                  a(tabindex='-1', href='/user/logout') Выйти
+          else
+            a(href='/login') Войти
+            a(href='/signup') Регистрация
+
+    section#wrapper.clearfix
+      block content
+
+    footer#page-footer
+      #page-copyright.f-left
+        | © 2013
+        | «JeikAps.com – анонимная социальная сеть»
+      nav#page-footer-links.f-right
+        a(href='/') Вопрос & Ответ
+        a(href='/') Правила
+        a(href='/') Помощь
+        a(href='/') О нас
+      .clearfix
