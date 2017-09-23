@@ -2,15 +2,15 @@
 //  routes.js
 //  realive
 //
-//  Created by Yevheii Riabchych on 2017-09-21.
-//  Copyright 2017 Yevheii Riabchych. All rights reserved.
+//  Created by Yevhenii Riabchych on 2017-09-21.
+//  Copyright 2017 Yevhenii Riabchych. All rights reserved.
 //
 var path = require('path');
 var requireTree = require('require-tree');
 var mustAuthenticatedMw = require(path.join(global.config.paths.utils_dir, '/mustAuthenticatedMw.js'));
 var controllers = requireTree(global.config.paths.controllers_dir);
 
-module.exports.set = function (app) {
+module.exports.set = app => {
     
     // Basic routes
     app.get('/', controllers.home);

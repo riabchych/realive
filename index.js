@@ -1,4 +1,10 @@
-
+//
+//  index.js
+//  realive
+//
+//  Created by Yevhenii Riabchych on 2017-09-21.
+//  Copyright 2017 Yevhenii Riabchych. All rights reserved.
+//
 var path = require('path');
 global.config = require(path.join(__dirname, '/src/config'));
 var app = require(path.join(global.config.paths.src_dir, '/app.js'))();
@@ -54,4 +60,4 @@ function onListening() {
 
 var server = http.createServer(app).listen(port);
 server.on('listening', onListening);
-//server.on('error', onError);
+server.on('error', onError);

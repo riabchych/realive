@@ -2,8 +2,8 @@
 //  api-message.js
 //  realive
 //
-//  Created by Yevheii Riabchych on 2017-09-21.
-//  Copyright 2017 Yevheii Riabchych. All rights reserved.
+//  Created by Yevhenii Riabchych on 2017-09-21.
+//  Copyright 2017 Yevhenii Riabchych. All rights reserved.
 //
 var ApiMessages = module.exports = function () { };
 ApiMessages.EMAIL_NOT_FOUND = 0;

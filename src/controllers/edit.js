@@ -2,17 +2,17 @@
 //  edit.js
 //  realive
 //
-//  Created by Yevheii Riabchych on 2017-09-21.
-//  Copyright 2017 Yevheii Riabchych. All rights reserved.
+//  Created by Yevhenii Riabchych on 2017-09-21.
+//  Copyright 2017 Yevhenii Riabchych. All rights reserved.
 //
 var path = require('path');
 var flashMessages = require(path.join(global.config.paths.utils_dir, '/flash'));
 var UserProfile = require(path.join(global.config.paths.models_dir, '/user-profile.js'));
-var UserModel = require(path.join(global.config.paths.models_dir, '/user.js'));
-var userController = require(path.join(global.config.paths.controllers_dir, '/user-controller.js'));
+var UserController = require(path.join(global.config.paths.controllers_dir, '/user-controller.js'));
+var Promise = require('bluebird');
 var _ = require('lodash');
 
-module.exports = function (req, res) {
+module.exports = (req, res) => {
     if (!req.user) {
         return res.redirect('/login');
     }
@@ -21,14 +21,23 @@ module.exports = function (req, res) {
 
     if (req.method == "POST") {
         params = _.extend(req.query || {}, req.params || {}, req.body || {});
-        var userModel = new UserModel(req.user);
-        return userController(userModel).updateUser(params.user, function (err, user) {
-            req.user = user;
-            return req.login(user, function (err) {
-                return res.redirect('back');
+        req.login = Promise.promisify(req.login);
+        return new UserController(req.user).updateUser(params.user)
+            .catch(err => {
+                console.log('error:', err);
+            })
+            .then(user => {
+                req.login(user.extras.user)
+                    .catch(function (err) {
+                        new Error(err);
+                    })
+                    .then(function () {
+                        res.redirect('back');
+                    });
+            })
+            .catch(err => {
+                console.log('error:', err);
             });
-
-        });
     }
     else {
         params.title = 'Редактирование :: ' + req.user.fullName + ' :: Dismus';

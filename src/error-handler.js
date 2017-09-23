@@ -2,8 +2,8 @@
 //  api-message.js
 //  error-handler
 //
-//  Created by Yevheii Riabchych on 2015-11-03.
-//  Copyright 2017 Yevheii Riabchych. All rights reserved.
+//  Created by Yevhenii Riabchych on 2015-11-03.
+//  Copyright 2017 Yevhenii Riabchych. All rights reserved.
 //
 (function() {
 

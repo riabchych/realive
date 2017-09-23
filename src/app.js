@@ -2,19 +2,19 @@
 //  app.js
 //  realive
 //
-//  Created by Yevheii Riabchych on 2017-09-21.
-//  Copyright 2017 Yevheii Riabchych. All rights reserved.
+//  Created by Yevhenii Riabchych on 2017-09-21.
+//  Copyright 2017 Yevhenii Riabchych. All rights reserved.
 //
-
 (function () {
 
-    //var multer = require('multer');    
+    //var multer = require('multer');  
+    var Promise = require("bluebird");
     var path = require('path');
     var bodyParser = require("body-parser");
     var cookieParser = require('cookie-parser');
     var expressSession = require('express-session');
     var express = require('express');
-    var mongoose = require('mongoose');
+    var mongoose = Promise.promisifyAll(require('mongoose'));
     var expressValidator = require('express-validator');
     var favicon = require('serve-favicon');
     var passport = require('passport');
@@ -26,7 +26,7 @@
     var logger = require(path.join(global.config.paths.utils_dir, '/logger'));
     var morgan = require('morgan');
 
-    module.exports = function () {
+    module.exports = () => {
 
         this.app = express();
         this.app.set('views', global.config.paths.views_dir);
@@ -52,16 +52,18 @@
             });
         }
 
-        this.app.use(expressSession(sessionParam));
+        this.app.use(express.static(global.config.paths.public_dir));
+        this.app.use(cookieParser(global.config.cookies.secret));
         this.app.use(bodyParser.json());
         this.app.use(bodyParser.urlencoded({ extended: true }));
-        this.app.use(express.static(global.config.paths.public_dir));
+        this.app.use(expressSession(sessionParam));
+        this.app.use(passport.initialize());
+        this.app.use(passport.session());
         this.app.use(expressValidator({ customValidators: customValidators }));
-        this.app.use(cookieParser(global.config.cookies.secret));
         this.app.use(flash());
         this.app.use(csrf({ cookie: false }));
 
-        this.app.use(function (req, res, next) {
+        this.app.use((req, res, next) => {
             var msg = req.flash('success_messages');
             res.locals.success_messages = msg.length > 0 ? msg : null;
             msg = req.flash('error_messages');
@@ -69,8 +71,6 @@
             next();
         });
 
-        this.app.use(passport.initialize());
-        this.app.use(passport.session());
 
         require(path.join(global.config.paths.middleware_dir + '/passport/init'))(passport);
         require(path.join(global.config.paths.src_dir, '/routes.js')).set(this.app);
@@ -79,11 +79,11 @@
             require(path.join(global.config.paths.src_dir, '/error-handler')).set(this.app);
         }
 
-        this.app.on('connection', function (socket) {
+        this.app.on('connection', (socket) => {
             socket.setNoDelay();
         });
 
-        mongoose.connection.on('open', function (ref) {
+        mongoose.connection.on('open', (ref) => {
             logger.info('Connected to mongo server.');
         });
 
@@ -92,7 +92,7 @@
             logger.error(err);
         });
 
-        this.initDbUri = function () {
+        this.initDbUri = () => {
             return ['mongodb://',
                 global.config.db.username ? (global.config.db.username + ':' + global.config.db.password + '@') : '',
                 global.config.db.host, ':',

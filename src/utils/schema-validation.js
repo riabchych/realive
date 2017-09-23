@@ -2,8 +2,8 @@
 //  schema-validation.js
 //  realive
 //
-//  Created by Yevheii Riabchych on 2017-01-25.
-//  Copyright 2017 Yevheii Riabchych. All rights reserved.
+//  Created by Yevhenii Riabchych on 2017-01-25.
+//  Copyright 2017 Yevhenii Riabchych. All rights reserved.
 //
 
 module.exports = {

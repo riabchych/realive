@@ -2,8 +2,8 @@
 //  validator.js
 //  realive
 //
-//  Created by Yevheii Riabchych on 2012-04-21.
-//  Copyright 2012 Yevheii Riabchych. All rights reserved.
+//  Created by Yevhenii Riabchych on 2012-04-21.
+//  Copyright 2012 Yevhenii Riabchych. All rights reserved.
 //
 (function() {
 

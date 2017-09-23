@@ -2,8 +2,8 @@
 //  custom-validators.js
 //  realive
 //
-//  Created by Yevheii Riabchych on 2016-10-25.
-//  Copyright 2012 Yevheii Riabchych. All rights reserved.
+//  Created by Yevhenii Riabchych on 2016-10-25.
+//  Copyright 2012 Yevhenii Riabchych. All rights reserved.
 //
 var User = require('../models/user');
 

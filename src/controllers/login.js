@@ -2,58 +2,49 @@
 //  login.js
 //  realive
 //
-//  Created by Yevheii Riabchych on 2017-09-21.
-//  Copyright 2017 Yevheii Riabchych. All rights reserved.
+//  Created by Yevhenii Riabchych on 2017-09-21.
+//  Copyright 2017 Yevhenii Riabchych. All rights reserved.
 //
 
 (function () {
     var passport = require("passport");
     var path = require('path');
     var logger = require(path.join(global.config.paths.utils_dir, '/logger'));
+    var Promise = require('bluebird');
     //var should = require("should");
 
-    module.exports = function (req, res, next) {
-        var params = {};
+    module.exports = (req, res, next) => {
         if (req.method == "POST") {
-
-            passport.authenticate('login',
-                function (err, info, extras) {
-
-                    if (err) {
-                        req.flash('error_messages', 'System error!');
-                        logger.error('System error!');
-                        return res.redirect('back');
-
-                    } else if (info && info.success && info.extras && info.extras.user) {
-                        return req.logIn(info.extras.user, function (err, user) {
-                            if (!err) {
-                                logger.info("User " + info.extras.user.username + " has been logged");
-                                return res.redirect('/user/' + info.extras.user.username);
-                            } else {
-                                return next(err);
-                            }
-                        });
-
-                    } else if ((info && info.extras) || (info && info.extras && info && info.extras.msg && err)) {
-                        if (err) {
-                            return next(err);
-                        } else {
-                            if (extras && extras.message) {
-                                logger.error('Login failed!');
-                                req.flash('error_messages', extras.message);
-                            }
-                        }
+            new Promise((resolve, reject) => {
+                passport.authenticate('login', result => {
+                    if (result && result.extras && result.extras.user) {
+                        return resolve(result.extras.user);
                     } else {
-                        logger.error('System error!');
-                        req.flash('error_messages', 'System error!');
+                        return reject();
                     }
+                })(req, res, next);
+            })
+                .then(user => {
+                    if (!user) {
+                        return Promise.reject();
+                    }
+                    req.login = Promise.promisify(req.login);
+                    return req.login(user)
+                        .then(() => {
+                            logger.info("User " + user.username + " has been logged");
+                            return res.redirect('/user/' + user.username);
+                        });
+                })
+                .catch(err => {
                     return res.redirect('back');
-                }
-            )(req, res, next);
+                });
+
+
         } else {
-            params.title = "Login";
-            params.csrfToken = encodeURIComponent(req.csrfToken());
-            res.render('login', params);
+            res.render('login', {
+                'title' : 'Login',
+                'csrfToken' : encodeURIComponent(req.csrfToken())
+            });
         }
     };
 
