@@ -102,7 +102,6 @@
         };
 
         mongoose.connect(this.initDbUri(), { useMongoClient: true });
-
         return this.app;
     };
 

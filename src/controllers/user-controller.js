@@ -15,6 +15,7 @@ var ApiResponse = require(path.join(global.config.paths.config_dir, '/api-respon
 var ApiMessages = require(path.join(global.config.paths.config_dir, '/api-messages.js'));
 var UserProfile = require(path.join(global.config.paths.models_dir, '/user-profile.js'));
 var UserModel = require(path.join(global.config.paths.models_dir, '/user'));
+var _ = require('lodash');
 
 class UserController {
 
@@ -25,11 +26,13 @@ class UserController {
     readAllUsers() {
         var self = this;
         return new Promise((resolve, reject) => {
-
+            if (!_.has(self, 'userModel') || _.isEmpty(self.userModel)) {
+                return new Error(new ApiResponse({ success: false, extras: { msg: ApiMessages.INTERNAL_ERROR } }));
+            }
             var findUser = data => {
-                if (data) {
+                if (!_.isEmpty(data)) {
                     var users = [];
-                    data.forEach(user => {
+                    _.each(data, user => {
                         users.push(new UserProfile({
                             email: user.email,
                             firstName: user.firstName,
@@ -58,9 +61,12 @@ class UserController {
         var self = this;
 
         return new Promise((resolve, reject) => {
+            if (!_.has(self, 'userModel') || _.isEmpty(self.userModel)) {
+                return new Error(new ApiResponse({ success: false, extras: { msg: ApiMessages.INTERNAL_ERROR } }));
+            }
 
             var findUser = data => {
-                if (data) {
+                if (!_.isEmpty(data)) {
                     return data;
                 } else {
                     throw new ApiResponse({ success: false, extras: { msg: ApiMessages.DB_ERROR } });
@@ -75,7 +81,7 @@ class UserController {
                 return reject(new Error(data));
             };
 
-            self.userModel.findByUserName(userModel.username).then(findUser).then(userFound).catch(error);
+            self.userModel.findByUserName(self.userModel.username).then(findUser).then(userFound).catch(error);
         });
     }
 
@@ -83,9 +89,12 @@ class UserController {
         var self = this;
 
         return new Promise((resolve, reject) => {
+            if (!_.has(self, 'userModel') || _.isEmpty(self.userModel)) {
+                return new Error(new ApiResponse({ success: false, extras: { msg: ApiMessages.INTERNAL_ERROR } }));
+            }
 
             var saveUser = data => {
-                if (data) {
+                if (!_.isEmpty(data)) {
                     return data;
                 } else {
                     throw new ApiResponse({ success: false, extras: { msg: ApiMessages.DB_ERROR } });
@@ -109,10 +118,14 @@ class UserController {
         var self = this;
 
         return new Promise((resolve, reject) => {
+            if (!_.has(self, 'userModel') || _.isEmpty(self.userModel)) {
+                return new Error(new ApiResponse({ success: false, extras: { msg: ApiMessages.INTERNAL_ERROR } }));
+            }
+
             var updatedUser = {};
 
             var userFind = data => {
-                if (data) {
+                if (!_.isEmpty(data)) {
                     return data;
                 } else {
                     throw new ApiResponse({ success: false, extras: { msg: ApiMessages.DB_ERROR } });
@@ -127,39 +140,36 @@ class UserController {
                 return reject(new Error(data));
             };
 
-            if (userIn) {
-                if (userIn.name) {
-                    userIn.name = userIn.name.split(' ');
+            if (!_.isEmpty(userIn)) {
+
+                if (_.has(userIn, 'name') && !_.isEmpty(userIn.name)) {
+                    userIn.name = _.split(userIn.name, ' ');
+
+                    if (_.isArray(userIn.name) && _.size(userIn.name) > 1) {
+                        updatedUser.name = {};
+                        updatedUser.name.first = userIn.name[0];
+                        updatedUser.name.last = userIn.name[1];
+                    }
                 }
 
-                if (userIn.name && userIn.name[0]) {
-                    updatedUser.name = {};
-                    updatedUser.name.first = userIn.name[0];
-                }
-
-                if (userIn.name && userIn.name[1]) {
-                    updatedUser.name = updatedUser.name || {};
-                    updatedUser.name.last = userIn.name[1];
-                }
-
-                if (userIn.website) {
+                if (_.has(userIn, 'website') && !_.isEmpty(userIn.website)) {
                     updatedUser.website = userIn.website;
                 }
 
-                if (userIn.about) {
+                if (_.has(userIn, 'about') && !_.isEmpty(userIn.about)) {
                     updatedUser.about = userIn.about;
                 }
 
-                if (userIn.username) {
+                if (_.has(userIn, 'username') && !_.isEmpty(userIn.username)) {
                     updatedUser.username = userIn.username;
                 }
 
-                if (userIn.email) {
+                if (_.has(userIn, 'email') && !_.isEmpty(userIn.email)) {
                     updatedUser.email = userIn.email;
                 }
 
-                if (userIn.location) {
-                    updatedUser.location = userIn.location || null;
+                if (_.has(userIn, 'location') && !_.isEmpty(userIn.location)) {
+                    updatedUser.location = userIn.location;
                 }
 
                 mongoose.model('User')
@@ -174,13 +184,16 @@ class UserController {
         });
     }
 
-    deleteUser() {
+    deleteUser(id) {
+
         var self = this;
 
         return new Promise((resolve, reject) => {
-
+            if (!_.has(self, 'userModel') || _.isEmpty(self.userModel)) {
+                return new Error(new ApiResponse({ success: false, extras: { msg: ApiMessages.INTERNAL_ERROR } }));
+            }
             var userDelete = data => {
-                if (data) {
+                if (!_.isEmpty(data)) {
                     return data;
                 } else {
                     throw new ApiResponse({ success: false, extras: { msg: ApiMessages.DB_ERROR } });
@@ -200,11 +213,16 @@ class UserController {
     }
 
     userIsValid(email, password) {
+
         var self = this;
 
         return new Promise((resolve, reject) => {
+            if (!_.has(self, 'userModel') || _.isEmpty(self.userModel)) {
+                return new Error(new ApiResponse({ success: false, extras: { msg: ApiMessages.INTERNAL_ERROR } }));
+            }
+
             var findUser = data => {
-                if (!data) {
+                if (_.isEmpty(data)) {
                     throw new ApiResponse({ success: false, extras: { msg: ApiMessages.NOT_FOUND } });
                 } else {
                     if (self.encryptPassword(password, data.salt) == data.password_hash) {

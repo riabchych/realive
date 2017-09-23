@@ -10,10 +10,9 @@
     var logger = require(path.join(global.config.paths.utils_dir, '/logger'));
 
     module.exports = (req, res) => {
-        req.session.destroy()
-        req.logout()
+        req.logout();
         logger.info('Session was destroyed!');
-        res.redirect('/')
+        res.redirect('/');
     };
 
 }).call(this);

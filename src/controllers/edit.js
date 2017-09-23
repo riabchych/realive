@@ -13,38 +13,45 @@ var Promise = require('bluebird');
 var _ = require('lodash');
 
 module.exports = (req, res) => {
-    if (!req.user) {
+    if (!_.has(req, 'user') && !_.has(req.user, '_doc.username')) {
+        req.logout();
         return res.redirect('/login');
     }
 
-    var params = {};
-
     if (req.method == "POST") {
         params = _.extend(req.query || {}, req.params || {}, req.body || {});
-        req.login = Promise.promisify(req.login);
-        return new UserController(req.user).updateUser(params.user)
-            .catch(err => {
-                console.log('error:', err);
-            })
-            .then(user => {
-                req.login(user.extras.user)
-                    .catch(function (err) {
-                        new Error(err);
-                    })
-                    .then(function () {
-                        res.redirect('back');
-                    });
-            })
-            .catch(err => {
-                console.log('error:', err);
-            });
+        if (!_.has(params, 'user')) {
+            return res.redirect('back');
+        } else {
+            req.login = Promise.promisify(req.login);
+            return new UserController(req.user).updateUser(params.user)
+                .catch(err => {
+                    console.log('ERROR:', err);
+                })
+                .then(data => {
+                    if (!_.has(data, 'extras.user')) {
+                        throw new Error('Object \'user is\' empty');
+                    } else {
+                        req.login(data.extras.user)
+                            .catch(function (err) {
+                                new Error(err);
+                            })
+                            .then(function () {
+                                res.redirect('back');
+                            });
+                    }
+                })
+                .catch(err => {
+                    console.log('ERROR:', err);
+                });
+        }
     }
     else {
-        params.title = 'Редактирование :: ' + req.user.fullName + ' :: Dismus';
-        params.csrfToken = encodeURIComponent(req.csrfToken());
-        params.messages = flashMessages(req, res);
-        params.owner = new UserProfile(req.user);
-
-        return res.render('edit', params);
+        return res.render('edit', {
+            title: 'Редактирование :: ' + req.user.fullName,
+            csrfToken: encodeURIComponent(req.csrfToken()),
+            messages: flashMessages(req, res),
+            owner: new UserProfile(req.user)
+        });
     }
 };

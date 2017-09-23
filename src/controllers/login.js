@@ -11,29 +11,26 @@
     var path = require('path');
     var logger = require(path.join(global.config.paths.utils_dir, '/logger'));
     var Promise = require('bluebird');
-    //var should = require("should");
+    var _ = require('lodash');
 
     module.exports = (req, res, next) => {
         if (req.method == "POST") {
             new Promise((resolve, reject) => {
                 passport.authenticate('login', result => {
-                    if (result && result.extras && result.extras.user) {
-                        return resolve(result.extras.user);
-                    } else {
-                        return reject();
-                    }
+                    return _.has(result, 'extras.user') ? resolve(result.extras.user) : reject();
                 })(req, res, next);
             })
                 .then(user => {
-                    if (!user) {
+                    if (!_.has(user, 'username') && _.isEmpty(user.username)) {
                         return Promise.reject();
+                    } else {
+                        req.login = Promise.promisify(req.login);
+                        return req.login(user)
+                            .then(() => {
+                                logger.info("User " + user.username + " has been logged");
+                                return res.redirect('/user/' + user.username);
+                            });
                     }
-                    req.login = Promise.promisify(req.login);
-                    return req.login(user)
-                        .then(() => {
-                            logger.info("User " + user.username + " has been logged");
-                            return res.redirect('/user/' + user.username);
-                        });
                 })
                 .catch(err => {
                     return res.redirect('back');
@@ -42,8 +39,8 @@
 
         } else {
             res.render('login', {
-                'title' : 'Login',
-                'csrfToken' : encodeURIComponent(req.csrfToken())
+                'title': 'Login',
+                'csrfToken': encodeURIComponent(req.csrfToken())
             });
         }
     };
