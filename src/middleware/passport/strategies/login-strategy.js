@@ -13,7 +13,6 @@ var Promise = require("bluebird");
 var LocalStrategy = require('passport-local').Strategy;
 var ApiMessages = require(path.join(global.config.paths.config_dir, '/api-messages'));
 var UserModel = require(path.join(global.config.paths.models_dir, '/user'));
-var UserController = require(path.join(global.config.paths.controllers_dir, '/user-controller'));
 var logger = require(path.join(global.config.paths.utils_dir, '/logger'));
 var _ = require('lodash');
 
@@ -24,7 +23,7 @@ module.exports = passport => {
             session: true,
             passReqToCallback: true
         }, (req, username, password, next) => {
-            new UserController({ email: username }).userIsValid(username, password)
+            new UserModel({ email: username }).userIsValid(username, password)
                 .then(result => {
                     logger.info('Login is successfully');
                     return next(result);
@@ -33,7 +32,7 @@ module.exports = passport => {
                     if (_.has(result, 'extras.msg')) {
                         switch (result.extras.msg) {
                             case ApiMessages.NOT_FOUND:
-                                logger.info('User Not Found with login ' + ' ' + username);
+                                logger.info(`User Not Found with login ${username}`);
                                 req.flash('error_messages', 'User Not Found.');
                                 return Promise.reject(result);
                                 break;

@@ -1,5 +1,5 @@
 //
-//  login.js
+//  loginCtrl.js
 //  realive
 //
 //  Created by Yevhenii Riabchych on 2017-09-21.
@@ -14,7 +14,7 @@
     var _ = require('lodash');
 
     module.exports = (req, res, next) => {
-        if (req.method == "POST") {
+        if (_.isEqual(req.method, "POST")) {
             new Promise((resolve, reject) => {
                 passport.authenticate('login', result => {
                     return _.has(result, 'extras.user') ? resolve(result.extras.user) : reject();
@@ -22,21 +22,19 @@
             })
                 .then(user => {
                     if (!_.has(user, 'username') && _.isEmpty(user.username)) {
-                        return Promise.reject();
+                        return new Promise.reject();
                     } else {
                         req.login = Promise.promisify(req.login);
                         return req.login(user)
                             .then(() => {
-                                logger.info("User " + user.username + " has been logged");
-                                return res.redirect('/user/' + user.username);
+                                logger.info(`User ${user.username} has been logged`);
+                                return res.redirect(`/user/${user.username}`);
                             });
                     }
                 })
-                .catch(err => {
+                .catch(() => {
                     return res.redirect('back');
                 });
-
-
         } else {
             res.render('login', {
                 'title': 'Login',
@@ -44,5 +42,4 @@
             });
         }
     };
-
 }).call(this);

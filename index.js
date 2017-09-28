@@ -6,9 +6,9 @@
 //  Copyright 2017 Yevhenii Riabchych. All rights reserved.
 //
 var path = require('path');
-global.config = require(path.join(__dirname, '/src/config'));
-var app = require(path.join(global.config.paths.src_dir, '/app.js'))();
 var http = require('http');
+global.config = require(path.join(__dirname, '/config'));
+var app = require(path.join(global.config.paths.src_dir, '/app.js'))();
 var port = normalizePort(process.env.PORT || '8080');
 var logger = require(path.join(global.config.paths.utils_dir, '/logger'));
 

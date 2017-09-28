@@ -66,6 +66,7 @@
         this.app.use((req, res, next) => {
             var msg = req.flash('success_messages');
             res.locals.success_messages = msg.length > 0 ? msg : null;
+            res.locals._ = require("lodash");
             msg = req.flash('error_messages');
             res.locals.error_messages = msg.length > 0 ? msg : null;
             next();

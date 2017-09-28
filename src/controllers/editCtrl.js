@@ -7,8 +7,8 @@
 //
 var path = require('path');
 var flashMessages = require(path.join(global.config.paths.utils_dir, '/flash'));
-var UserProfile = require(path.join(global.config.paths.models_dir, '/user-profile.js'));
-var UserController = require(path.join(global.config.paths.controllers_dir, '/user-controller.js'));
+var UserProfile = require(path.join(global.config.paths.models_dir, '/user-profile'));
+var UserModel = require(path.join(global.config.paths.models_dir, '/user'));
 var Promise = require('bluebird');
 var _ = require('lodash');
 
@@ -24,7 +24,7 @@ module.exports = (req, res) => {
             return res.redirect('back');
         } else {
             req.login = Promise.promisify(req.login);
-            return new UserController(req.user).updateUser(params.user)
+            return new UserModel(req.user).updateUser(params.user)
                 .catch(err => {
                     console.log('ERROR:', err);
                 })

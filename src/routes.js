@@ -13,20 +13,25 @@ var controllers = requireTree(global.config.paths.controllers_dir);
 module.exports.set = app => {
     
     // Basic routes
-    app.get('/', controllers.home);
-    app.get('/login', controllers.login);
-    app.get('/signup', controllers.signup);
+    app.get('/', controllers.homeCtrl);
+    app.get('/login', controllers.loginCtrl);
+    app.get('/signup', controllers.signupCtrl);
     
     // Auth controllers
-    app.post('/login', controllers.login);
-    app.post('/signup', controllers.signup);
+    app.post('/login', controllers.loginCtrl);
+    app.post('/signup', controllers.signupCtrl);
     
     // Only for registred users
-    app.get('/user/edit', mustAuthenticatedMw, controllers.edit);
-    app.post('/user/edit/personally', mustAuthenticatedMw, controllers.edit);
+    app.get('/user/edit', mustAuthenticatedMw, controllers.editCtrl);
+    app.post('/user/edit/personally', mustAuthenticatedMw, controllers.editCtrl);
     //app.post('/user/edit/email', mustAuthenticatedMw, controllers.users.edit.personally);
     //app.post('/user/edit/username', mustAuthenticatedMw, controllers.users.edit.personally);
-    app.get('/user/logout', mustAuthenticatedMw, controllers.logout);
+    app.get('/user/logout', mustAuthenticatedMw, controllers.logoutCtrl);
 
-    app.get('/user/:username', controllers.profile);
+    app.get('/user/:username', controllers.profileCtrl);
+
+    // Review controllers
+    app.post('/review/:action', controllers.reviewCtrl);
+    //app.post('/review/get/:review', mustAuthenticatedMw, controllers.reviewCtrl);
+    //app.post('/review/list', mustAuthenticatedMw, controllers.reviewCtrl);
 };

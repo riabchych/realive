@@ -1,5 +1,5 @@
 //
-//  home.js
+//  homeCtrl.js
 //  realive
 //
 //  Created by Yevhenii Riabchych on 2017-09-21.

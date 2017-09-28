@@ -1,5 +1,5 @@
 //
-//  schema-validation.js
+//  user-validation-schema.js
 //  realive
 //
 //  Created by Yevhenii Riabchych on 2017-01-25.

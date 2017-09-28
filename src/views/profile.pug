@@ -2,7 +2,7 @@
 
 block content
   #profile-head.f-left
-    a#profile-image.big-profile-photo-envelope(href='/images/userpics/thumbs_m/' + user.photo, onclick='return dismus.profile.showPhoto(this)', title='Фотография профилия ' + user.fullName)
+    a#profile-image.big-profile-photo-envelope(href='/images/userpics/thumbs_m/' + user.photo, onclick='return app.profile.showPhoto(this)', title='Фотография профилия ' + user.fullName)
       img(src='/images/userpics/thumbs_m/' + user.photo)
     #profile-info
       h2#profile-name #{user.fullName}
@@ -15,17 +15,17 @@ block content
         td.item
           span
             a(href='/following/' + (user.userName || user.id))
-              span.stat-digit #{user.followingCount || 0}
+              span.stat-digit= user.meta ? user.meta.numberOfSubscriptions : 0
               span.stat-label Читает
         td.item.middle
           span
             a(href='/followers/' + (user.userName || user.id))
-              span.stat-digit #{user.followersCount || 0}
+              span.stat-digit= user.meta ? user.meta.numberOfFollowers : 0
               span.stat-label Подписчиков
         td.item
           span
             a(href='/reviews/' + (user.userName || user.id))
-              span.stat-digit #{user.opinionsCount || 0}
+              span.stat-digit= user.meta ? user.meta.numberOfReviews : 0
               span.stat-label Отзывов
     .profiles-block
         .title
@@ -41,68 +41,71 @@ block content
                 .profile-name item
               .clearfix
           else
-            p.default-text(style='margin: 5px 10px') #{user.isOwner ? 'Вы никого не читаетe' : user.fullName + ' никого не читает'}
+            p.default-text(style="margin: 5px 10px") #{user.isOwner ? 'Вы никого не читаетe' : user.fullName + ' никого не читает'}
     if(!user.isOwner)
       #actions
         if(user.isFollowing) 
           .notice Вы подписаны на данного пользователя
-          button#follow-button.blue-button(onclick='dismus.profile.unfollow(this)') Отписаться
+          button#follow-button.blue-button(onclick='app.profile.unfollow(this)') Отписаться
         else
-          button#follow-button.blue-button(onclick='dismus.profile.follow(this)') Подписаться
+          button#follow-button.blue-button(onclick='app.profile.follow(this)') Подписаться
   #profile-wall.f-left
     if(!user.isOwner)
-      a#show-form-link.light-link.noselect(onclick='review.showForm(this)') Оставить отзыв о пользователе
+      a#show-form-link.light-link.noselect(onclick='review.toggleForm(this)') Оставить отзыв о пользователе
       #review-form-container
         h2.f-left Ваш отзыв о пользователе
-        a.f-right.noselect(onclick='review.showForm(this)')
+        a.f-right.noselect(onclick='review.toggleForm(this)')
           small скрыть форму
         .clearfix
-        form#review-form(method='post', action='/reviews/create')
-          input(type='hidden', name='review[uid]', value=user.id)
+        form#review-form(method='POST', action='/review/new')
+          input(type='hidden', name='review[to]', value=user.id)
           input(type='hidden', name='_csrf', value=decodeURIComponent(csrfToken))
           textarea#review-text(name='review[text]')
           .review-options.noselect
-            span#review-word-counter 400
+            span#review-word-counter 500
             input.blue-button(type='submit', value='Отправить')
             .action-divider
               span.custom-checkbox
-                input#opinion_public(type='checkbox', name='review[private]')
+                input#review_public(type='checkbox', name='review[isPrivate]')
                 span.box
                   span.tick
-              label(for='opinion_public') Приватно
-            if(user && user.id)
+              label(for='review_public') Приватно
+            if (owner && owner.userName)
               .action-divider
                 span.custom-checkbox
-                  input#opinion_type(type='checkbox', name='review[hidden]', checked='')
+                  input#review_type(type='checkbox', name='review[isHidden]', checked)
                   span.box
                     span.tick
-                label(for='opinion_type') Анонимно
+                label(for='review_type') Анонимно
             .clearfix
     #wall-options.title
       h3#wall-title.f-left отзывы
-      a.f-right.noselect(onclick='dismus.review.toggleOpinions(this)') скрыть анонимные
+      a.f-right.noselect(onclick='review.toggleReviews(this)') скрыть анонимные
       .clearfix
     section#profile-reviews
-      //article
-        .small-profile-photo-envelope.f-left
-          img(src="user picture")
-        .review-text
-          .review-info
-            b Аноним
-            time.f-right.timeago(datetime="'-tiestamp-'") 19154654654
-          p Hello world
-        .review-details
-          .review-actions.f-right
-            a.item.icon_delete(onclick="dismus.review.remove('-tiestamp-'") Удалить
-            a.item.icon_reply(onclick='') Комментировать
-            a.item.icon_like(onclick="dismus.review.like('-tiestamp-'") Мне нравится
-        .clearfix
-      if(user.opinionCount>10)
-        a.light-link.noselect(onclick='dismus.review.load(this)', data-locals.user=user.id) Показать ещё
+      if(reviews && reviews.length > 0)
+        each r in reviews
+          if(!r.isPrivate)
+            article(class=r.isHidden || !owner.username ? 'review-hidden' : '')
+              .small-profile-photo-envelope.f-left
+                img(src=`/images/userpics/thumbs_s/${ r.from && 'photo' in r.from ? r.from.photo : 'no-avatar.gif' }`)
+              .review-text
+                .review-info !{r.from && 'name' in r.from && !r.isHidden ? `<a href="/user/${r.from.username}"><b>${r.from.name.first}  ${r.from.name.last}</b></a>` : `<b>Анноним</b>`}
+                  time.f-right.timeago(datetime=(r.createdAt || ''))
+                p #{ r.body || '' }
+              .review-details
+                .review-actions.f-right
+                  a.item.icon_delete(onclick=`app.review.remove('${r._id || 0}')`) Удалить
+                  a.item.icon_reply(onclick="") Комментировать
+                  a.item.icon_like(onclick=`app.review.like('${r._id || 0}')`) Мне нравится
+              .clearfix
       else
-        p.default-text(style='margin: 5px 10px')
-          if(user && user.isOwner)
-            | О Вас ещё не оставляли отзывов
-          else
-            | О данном пользователе ещё никто не оставлял отзывов
+        if(user.reviewCount>10)
+          a.light-link.noselect(onclick='app.review.load(this)', data-locals.user=user.id) Показать ещё
+        else
+          p.default-text(style='margin: 5px 10px')
+            if(user && user.isOwner)
+              | О Вас ещё не оставляли отзывов
+            else
+              | О данном пользователе ещё никто не оставлял отзывов
     div.clearfix

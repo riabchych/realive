@@ -16,6 +16,7 @@ var UserProfile = function (cnf) {
     this.website = cnf.website;
     this.photo = cnf.photo;
     this.isOwner = cnf.isOwner;
+    this.meta = cnf.meta;
 };
 
 module.exports = UserProfile;

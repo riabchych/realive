@@ -14,7 +14,7 @@ html(lang='en')
 
   block scripts
     script(src='/javascripts/jquery-3.1.1.js')
-    script(src='/javascripts/lazyload-min.js')
+    //script(src='/javascripts/lazyload-min.js')
     script(src='/javascripts/core.js')
 
   body
@@ -31,7 +31,7 @@ html(lang='en')
         nav#menu.f-right
           if (owner && owner.userName) 
             .dropdown
-              a.dropdown-toggle(onclick="profileMenu(this)", role='button', data-toggle='dropdown') #{owner.fullName}
+              a.dropdown-toggle(onclick="app.profileMenu(this)", role='button', data-toggle='dropdown') #{owner.fullName}
                 b.caret
               ul#profile-menu.dropdown-menu(role='menu', aria-labelledby='drop3')
                 li
@@ -44,7 +44,7 @@ html(lang='en')
           else
             a(href='/login') Войти
             a(href='/signup') Регистрация
-
+    #to-top
     section#wrapper.clearfix
       block content
 

@@ -1,5 +1,5 @@
 //
-//  logout.js
+//  logoutCtrl.js
 //  realive
 //
 //  Created by Yevhenii Riabchych on 2017-09-21.

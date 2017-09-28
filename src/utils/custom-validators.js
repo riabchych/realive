@@ -5,12 +5,13 @@
 //  Created by Yevhenii Riabchych on 2016-10-25.
 //  Copyright 2012 Yevhenii Riabchych. All rights reserved.
 //
-var User = require('../models/user');
+var path = require('path');
+var UserModel = require(path.join(global.config.paths.models_dir, '/user'));
 
 module.exports = {
     isEmailAvailable: function(email) {
       return new Promise(function(resolve, reject) {
-        User.findOne({ email: email })
+        UserModel.findOne({ email: email })
         .then(function(user) {
           if (user) {
             reject(user);
