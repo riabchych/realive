@@ -1,5 +1,10 @@
 ﻿extends layout.pug
 
+block append scripts
+  script(type='text/javascript').
+      var profile = !{JSON.stringify(user)};
+      var reviewItems = !{JSON.stringify(reviews)};
+
 block content
   #profile-head.f-left
     a#profile-image.big-profile-photo-envelope(href='/images/userpics/thumbs_m/' + user.photo, onclick='return app.profile.showPhoto(this)', title='Фотография профилия ' + user.fullName)
@@ -79,14 +84,14 @@ block content
                 label(for='review_type') Анонимно
             .clearfix
     #wall-options.title
-      h3#wall-title.f-left отзывы
-      a.f-right.noselect(onclick='review.toggleReviews(this)') скрыть анонимные
+      h3#wall-title.f-left
+      a#hide-annonymous.f-right.noselect
       .clearfix
     section#profile-reviews
       if(reviews && reviews.length > 0)
         each r in reviews
           if(!r.isPrivate)
-            article(class=r.isHidden || !owner.username ? 'review-hidden' : '')
+            article(class=r.isHidden ? 'review-hidden' : '')
               .small-profile-photo-envelope.f-left
                 img(src=`/images/userpics/thumbs_s/${ r.from && 'photo' in r.from ? r.from.photo : 'no-avatar.gif' }`)
               .review-text

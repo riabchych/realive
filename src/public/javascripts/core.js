@@ -1,14 +1,45 @@
 ﻿$(document).ready(function () {
 
-    app = {}, review = {};
-    review.isVisibleHiddenReviews = true;
+    app = {
+        reviewFormIsVisible : false,
+    }, review = {
+        count: {
+            hidden: 0, all: 0
+        },
+        showedForm: false,
+        isVisibleHiddenReviews: true
+    };
+
 
     app.profileMenu = function (el) {
         $('#profile-menu').toggle();
     };
 
     var reviews = $('#profile-reviews article');
-    review.countAll = reviews.length;
+
+    reviewItems.forEach(function (value, k) {
+        review.count.all++;
+        review.count.hidden = value.isHidden ? ++review.count.hidden : review.count.hidden;
+    });
+
+    $('#hide-annonymous')
+        .html(review.count.hidden > 0 ? 'скрыть анонимные' : '')
+        .click(function () {
+            if (!review.isVisibleHiddenReviews) {
+                $(this).html('скрыть аннонимные');
+                $('article.review-hidden').slideDown(200);
+                review.isVisibleHiddenReviews = true;
+                $('#wall-title').html('отзывов ' + review.count.all);
+            }
+            else {
+                $(this).html('показать все');
+                $('article.review-hidden').slideUp(200);
+                review.isVisibleHiddenReviews = false;
+                $('#wall-title').html('отзывов ' + (review.count.all - review.count.hidden));
+            }
+        });
+
+    $('#wall-title').html(review.count.all > 0 ? 'отзывов ' + review.count.all : 'отзывов нет');
 
     reviews.mouseover(function (e) {
         var qa = $(this).children().children('.review-actions');
@@ -23,34 +54,18 @@
     $('time.timeago').timeago();
 
     review.toggleForm = function (e) {
-        if (!review.showedForm) {
+        if (!app.reviewFormIsVisible) {
             $('#show-form-link').css('display', 'none');
             $('#review-form-container').fadeIn(200);
-            review.showedForm = true;
+            app.reviewFormIsVisible = true;
         }
         else {
             $('#show-form-link').show();
             $('#review-form-container').css('display', 'none');
-
-            review.showedForm = false;
+            app.reviewFormIsVisible = false;
         }
 
     };
-
-    review.toggleReviews = function (e) {
-        if (!review.isVisibleHiddenReviews) {
-            $(e).html('скрыть аннонимные');
-            $('article.review-hidden').slideDown(200);
-            review.isVisibleHiddenReviews = true;
-        }
-        else {
-            $(e).html('показать все');
-            $('article.review-hidden').slideUp(200);
-            review.isVisibleHiddenReviews = false;
-        }
-
-    };
-
 
     $("#to-top").scrollToTop();
     var compareHeight = function () {
@@ -65,10 +80,10 @@
 
     $("#review-text").keyup(function () {
         var o = $(this);
-        if (o.val().length > 400) {
-            o.val(o.val().slice(0, 400));
+        if (o.val().length > 500) {
+            o.val(o.val().slice(0, 500));
         }
-        $("#review-word-counter").html(400 - o.val().length)
+        $("#review-word-counter").html(500 - o.val().length)
     });
 });
 /**

@@ -210,6 +210,7 @@ User.methods.userIsValid = function (email, password) {
 };
 
 User.methods.updateUser = function (userIn) {
+    var self = this;
     return new Promise((resolve, reject) => {
         if (!_.isEmpty(userIn)) {
 
@@ -228,7 +229,7 @@ User.methods.updateUser = function (userIn) {
                 }
             }
 
-            this.findOneAndUpdate({ _id: this.id }, updatedUser, { multi: false })
+            self.model('User').findOneAndUpdate({ _id: self.id }, updatedUser, { multi: false })
                 .exec()
                 .then((data, err) => {
                     if (_.isEmpty(err)) {
