@@ -35,7 +35,7 @@
                 $(this).html('показать все');
                 $('article.review-hidden').slideUp(200);
                 review.isVisibleHiddenReviews = false;
-                $('#wall-title').html('отзывов ' + (review.count.all - review.count.hidden));
+                $('#wall-title').html('отзывов ' + (review.count.all - review.count.hidden || 'нет'));
             }
         });
 

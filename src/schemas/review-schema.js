@@ -5,7 +5,8 @@
 //  Created by Yevhenii Riabchych on 2017-09-25.
 //  Copyright 2017 Yevhenii Riabchych. All rights reserved.
 //
-var mongoose = require('mongoose');
+
+let mongoose = require('mongoose');
 
 module.exports = new mongoose.Schema({
     to: { type: mongoose.Schema.Types.ObjectId, ref: 'User', required: true },

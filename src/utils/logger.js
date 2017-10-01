@@ -1,5 +1,5 @@
-var winston = require('winston');
-var path = require('path');
+let winston = require('winston');
+let path = require('path');
 winston.emitErrs = true;
 
 var logger = new winston.Logger({

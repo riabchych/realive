@@ -1,16 +1,17 @@
 //
-//  edit.js
+//  editCtrl.js
 //  realive
 //
 //  Created by Yevhenii Riabchych on 2017-09-21.
 //  Copyright 2017 Yevhenii Riabchych. All rights reserved.
 //
-var path = require('path');
-var flashMessages = require(path.join(global.config.paths.utils_dir, '/flash'));
-var UserProfile = require(path.join(global.config.paths.models_dir, '/user-profile'));
-var UserModel = require(path.join(global.config.paths.models_dir, '/user'));
-var Promise = require('bluebird');
-var _ = require('lodash');
+
+let path = require('path');
+let flashMessages = require(path.join(global.config.paths.utils_dir, '/flash'));
+let UserProfile = require(path.join(global.config.paths.models_dir, '/user-profile'));
+let UserModel = require(path.join(global.config.paths.models_dir, '/user'));
+let Promise = require('bluebird');
+let _ = require('lodash');
 
 module.exports = (req, res) => {
     if (!_.has(req, 'user') && !_.has(req.user, '_doc.username')) {

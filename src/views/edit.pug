@@ -27,9 +27,8 @@ block content
         .row(style='margin-bottom: 10px;')
           label Текущая фотография
           .f-left.big-profile-photo-envelope
-            a(href='/static/images/userpics/thumbs_m/' + owner.photo, title='На этой фотографии ' + owner.fullName, onclick='return dismus.profile.showPhoto(this)')
-              img#current-profile-image(src='/static/images/userpics/thumbs_m/' + owner.photo)
-            a(href='', title='На этой фотографии', onclick='return dismus.profile.showPhoto(this)')
+            a(href=`/images/userpics/thumbs_m/${owner.photo}`, title=`На этой фотографии ${owner.fullName}`, onclick='return dismus.profile.showPhoto(this)')
+            img#current-profile-image(src=`/images/userpics/thumbs_m/${owner.photo}`)
           .clearfix
         .row.buttons.divider
           button#button-change-photo.blue-button(onclick='dismus.profile.changePhoto(this)', title='Загрузка фотографии') Изменить фотографию

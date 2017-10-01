@@ -1,9 +1,9 @@
 // 
-//  flashMessages.js
-//  jeikaps
+//  flash.js
+//  realive
 //  
 //  Created by Yevhenii Riabchych on 2012-08-31.
-//  Copyright 2012 Yevhenii Riabchych. All rights reserved.
+//  Copyright 2017 Yevhenii Riabchych. All rights reserved.
 // 
 
 function FlashMessage(type, messages) {
@@ -31,7 +31,7 @@ FlashMessage.prototype = {
     },
 
     toHTML: function() {
-        var list = this.type == 'error' ? 'Пожалуйста, исправьте следующие ошибки:' : '';
+        let list = this.type == 'error' ? 'Пожалуйста, исправьте следующие ошибки:' : '';
 
         if (this.messages.length > 1 || this.type == 'error') {
             list += '<ol>';
@@ -49,9 +49,9 @@ FlashMessage.prototype = {
 };
 
 module.exports = function(req, res) {
-    var html = '';
+    let html = '';
     ['error', 'info'].forEach(function(type) {
-        var messages = req.flash(type);
+        let messages = req.flash(type);
         if (messages.length > 0) {
             html += new FlashMessage(type, messages).toHTML();
         }

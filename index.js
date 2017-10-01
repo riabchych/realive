@@ -5,17 +5,18 @@
 //  Created by Yevhenii Riabchych on 2017-09-21.
 //  Copyright 2017 Yevhenii Riabchych. All rights reserved.
 //
-var path = require('path');
-var http = require('http');
+
+let path = require('path');
+let http = require('http');
 global.config = require(path.join(__dirname, '/config'));
-var app = require(path.join(global.config.paths.src_dir, '/app.js'))();
-var port = normalizePort(process.env.PORT || '8080');
-var logger = require(path.join(global.config.paths.utils_dir, '/logger'));
+let app = require(path.join(global.config.paths.src_dir, '/app.js'))();
+let port = normalizePort(process.env.PORT || '8080');
+let logger = require(path.join(global.config.paths.utils_dir, '/logger'));
 
 app.set('port', port);
 
 function normalizePort(val) {
-  var port = parseInt(val, 10);
+  let port = parseInt(val, 10);
 
   if (isNaN(port)) {
     // named pipe
@@ -35,9 +36,9 @@ function onError(error) {
     throw error;
   }
 
-  var bind = typeof port === 'string'
-    ? 'Pipe ' + port
-    : 'Port ' + port;
+  let bind = typeof port === 'string' ?
+    'Pipe ' + port :
+    'Port ' + port;
 
   // handle specific listen errors with friendly messages
   switch (error.code) {
@@ -58,6 +59,6 @@ function onListening() {
   logger.info("Server listening on port " + port);
 }
 
-var server = http.createServer(app).listen(port);
+let server = http.createServer(app).listen(port);
 server.on('listening', onListening);
 server.on('error', onError);

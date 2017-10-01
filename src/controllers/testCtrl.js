@@ -1,16 +1,15 @@
 //
-//  homeCtrl.js
+//  testCtrl.js
 //  realive
 //
-//  Created by Yevhenii Riabchych on 2017-09-21.
+//  Created by Yevhenii Riabchych on 2017-09-30.
 //  Copyright 2017 Yevhenii Riabchych. All rights reserved.
 //
 
 module.exports = (req, res) => {
-    res.render("home", {
+    res.render("test", {
         locals: {
-            title: "Home"
+            title: "test"
         }
     });
-
 };

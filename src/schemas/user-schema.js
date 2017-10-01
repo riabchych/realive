@@ -5,7 +5,8 @@
 //  Created by Yevhenii Riabchych on 2017-09-24.
 //  Copyright 2017 Yevhenii Riabchych. All rights reserved.
 //
-var mongoose = require("mongoose");
+
+let mongoose = require("mongoose");
 
 module.exports = new mongoose.Schema({
     'name': {
@@ -70,6 +71,10 @@ module.exports = new mongoose.Schema({
     'last_login': {
         type: Date,
         default: Date.now
+    },
+    'verify_code' : {
+        type: String,
+        default: null
     },
     'password_hash': {
         type: String,

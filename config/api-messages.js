@@ -5,7 +5,8 @@
 //  Created by Yevhenii Riabchych on 2017-09-21.
 //  Copyright 2017 Yevhenii Riabchych. All rights reserved.
 //
-var ApiMessages = module.exports = function () { };
+
+let ApiMessages = module.exports = function () { };
 ApiMessages.EMAIL_NOT_FOUND = 0;
 ApiMessages.INVALID_PWD = 1;
 ApiMessages.DB_ERROR = 2;

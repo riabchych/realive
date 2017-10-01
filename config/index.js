@@ -6,13 +6,14 @@
 //  Copyright 2017 Yevhenii Riabchych. All rights reserved.
 //
 
-var path = require('path');
+let path = require('path');
 
-var config = module.exports = {};
+let config = module.exports = {};
 
 config.host = process.env.IP || '127.0.0.1';
 config.port = 8080;
 config.env = 'development';
+config.emailEncryptKey = 'r03n18y03a11mvvhr33';
 
 config.app = {};
 config.app.useErrorHandler = false;
@@ -49,6 +50,16 @@ config.paths.errors_dir = path.join(__dirname, '../src/errors');
 config.paths.middleware_dir = path.join(__dirname, '../src/middleware');
 config.paths.schemas_dir = path.join(__dirname, '../src/schemas');
 config.paths.models_dir = path.join(__dirname, '../src/models');
+config.paths.services_dir = path.join(__dirname, '../src/services');
 config.paths.utils_dir = path.join(__dirname, '../src/utils');
 config.paths.helpers_dir = path.join(__dirname, '../src/helpers');
 config.paths.controllers_dir = path.join(__dirname, '../src/controllers');
+
+config.mailer = {};
+
+config.mailer.host = 'localhost'
+config.mailer.port = 25;
+config.mailer.from = 'admin@domain.local';
+config.mailer.auth = {};
+config.mailer.auth.user = 'admin@domain.local';
+config.mailer.auth.pass = 'password';

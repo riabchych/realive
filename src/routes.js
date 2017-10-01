@@ -5,33 +5,36 @@
 //  Created by Yevhenii Riabchych on 2017-09-21.
 //  Copyright 2017 Yevhenii Riabchych. All rights reserved.
 //
-var path = require('path');
-var requireTree = require('require-tree');
-var mustAuthenticatedMw = require(path.join(global.config.paths.utils_dir, '/mustAuthenticatedMw.js'));
-var controllers = requireTree(global.config.paths.controllers_dir);
 
-module.exports.set = app => {
-    
-    // Basic routes
-    app.get('/', controllers.homeCtrl);
-    app.get('/login', controllers.loginCtrl);
-    app.get('/signup', controllers.signupCtrl);
-    
-    // Auth controllers
-    app.post('/login', controllers.loginCtrl);
-    app.post('/signup', controllers.signupCtrl);
-    
-    // Only for registred users
-    app.get('/user/edit', mustAuthenticatedMw, controllers.editCtrl);
-    app.post('/user/edit/personally', mustAuthenticatedMw, controllers.editCtrl);
-    //app.post('/user/edit/email', mustAuthenticatedMw, controllers.users.edit.personally);
-    //app.post('/user/edit/username', mustAuthenticatedMw, controllers.users.edit.personally);
-    app.get('/user/logout', mustAuthenticatedMw, controllers.logoutCtrl);
+let path = require('path');
+let requireTree = require('require-tree');
+let isLoggedIn = require(path.join(global.config.paths.utils_dir, '/isLoggedIn.js'));
+let controllers = requireTree(global.config.paths.controllers_dir);
+let router = require('express').Router();
 
-    app.get('/user/:username', controllers.profileCtrl);
+// Basic routes
+router.get('/', controllers.homeCtrl);
+router.get('/test', controllers.testCtrl);
+router.get('/login', controllers.loginCtrl);
+router.get('/signup', controllers.signupCtrl);
 
-    // Review controllers
-    app.post('/review/:action', controllers.reviewCtrl);
-    //app.post('/review/get/:review', mustAuthenticatedMw, controllers.reviewCtrl);
-    //app.post('/review/list', mustAuthenticatedMw, controllers.reviewCtrl);
-};
+// Auth controllers
+router.post('/login', controllers.loginCtrl);
+router.post('/signup', controllers.signupCtrl);
+
+// Only for registred users
+router.get('/user/edit', isLoggedIn, controllers.editCtrl);
+router.post('/user/edit/personally', isLoggedIn, controllers.editCtrl);
+//router.post('/user/edit/email', isLoggedIn, controllers.users.edit.personally);
+//router.post('/user/edit/username', isLoggedIn, controllers.users.edit.personally);
+router.get('/user/logout', isLoggedIn, controllers.logoutCtrl);
+
+router.get('/user/:username', controllers.profileCtrl);
+router.get('/user/email/:action/:token', controllers.emailCtrl);
+
+// Review controllers
+router.post('/review/:action', controllers.reviewCtrl);
+//router.post('/review/get/:review', isLoggedIn, controllers.reviewCtrl);
+//router.post('/review/list', isLoggedIn, controllers.reviewCtrl);
+
+module.exports = router;

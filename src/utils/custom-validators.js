@@ -5,8 +5,9 @@
 //  Created by Yevhenii Riabchych on 2016-10-25.
 //  Copyright 2012 Yevhenii Riabchych. All rights reserved.
 //
-var path = require('path');
-var UserModel = require(path.join(global.config.paths.models_dir, '/user'));
+
+let path = require('path');
+let UserModel = require(path.join(global.config.paths.models_dir, '/user'));
 
 module.exports = {
     isEmailAvailable: function(email) {
@@ -28,7 +29,7 @@ module.exports = {
       });
     },
     isName: function (value) {
-        var regexp = /^[a-z,A-Z,а-яіїєґ,А-ЯІЇЄҐ]{2,}$/i;
+        let regexp = /^[a-z,A-Z,а-яіїєґ,А-ЯІЇЄҐ]{2,}$/i;
         return regexp.test(value);
     }
 };

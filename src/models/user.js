@@ -54,8 +54,8 @@ User.methods.findByUserName = function (username, callback) {
     return this.model("User").findOne({ username: username }, callback);
 };
 
-User.methods.findByEmail = function (email, callback) {
-    return this.model("User").findOne({ email: email }, callback);
+User.statics.findByEmail = function (email, callback) {
+    return this.model("User").findOne({ email: email });
 };
 
 User.virtual('name.full').
@@ -100,10 +100,27 @@ User.pre('save', function (next) {
 User.statics.incValue = function (id, field) {
     return new Promise((resolve, reject) => {
         this.findByIdAndUpdate(id, { $inc: field }).exec()
-            .then((err, data) => {
-                if (!err || !_.isEmpty(data))
+            .then((data, err) => {
+                if (!err || !_.isEmpty(data)) {
                     return data;
-                else {
+                } else {
+                    throw new ApiResponse({ success: false, extras: { msg: ApiMessages.DB_ERROR } });
+                }
+            }).then(data => {
+                return resolve(new ApiResponse({ success: true, extras: { user: data } }));
+            }).catch(data => {
+                return reject(new Error(data));
+            });
+    });
+};
+
+User.statics.confirmEmail = function (id) {
+    return new Promise((resolve, reject) => {
+        this.findByIdAndUpdate(id, { status: 'valid' }).exec()
+            .then((data, err) => {
+                if (!err || !_.isEmpty(data)) {
+                    return data;
+                } else {
                     throw new ApiResponse({ success: false, extras: { msg: ApiMessages.DB_ERROR } });
                 }
             }).then(data => {
