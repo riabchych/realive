@@ -9,7 +9,6 @@
 let path = require('path');
 let Promise = require('bluebird');
 let _ = require('lodash');
-let mailer = require("nodemailer");
 let UserModel = require(path.join(global.config.paths.models_dir, '/user'));
 let MailService = require(path.join(global.config.paths.services_dir, '/mailer-service'));
 let schema = require(path.join(global.config.paths.schemas_dir, '/validation/user-validation-schema'));
@@ -22,53 +21,56 @@ module.exports = (req, res) => {
         if (!_.has(params, 'user') && !_.has(params, 'user.name')) {
             return res.redirect('back');
         } else {
-            let newUser = {};
-            newUser.name = {};
-            newUser.name.first = params.user.name.substr(0, params.user.name.indexOf(' ')) || newUser.name.first;
-            newUser.name.last = params.user.name.substr(params.user.name.indexOf(' ') + 1) || newUser.name.last;
-            newUser.email = params.user.email;
-            newUser.password = params.user.password;
-            newUser.repassword = params.user.repassword;
+            req.body.name = {};
+            req.body.name.first = params.user.name.substr(0, params.user.name.indexOf(' ')) || req.body.name.first;
+            req.body.name.last = params.user.name.substr(params.user.name.indexOf(' ') + 1) || req.body.name.last;
+            req.body.email = params.user.email;
+            req.body.password = params.user.password;
+            req.body.repassword = params.user.repassword;
 
-            req.body = newUser;
             req.sanitize('name.first').trim();
             req.sanitize('name.last').trim();
             req.sanitize('email').normalizeEmail({
                 remove_dots: false
             });
-            req.assert('repassword', 'Passwords do not match').equals(req.body.password);
+
+            req.assert('repassword', 'Пароли не совпадают').equals(req.body.password);
             req.checkBody(schema);
 
-            req.asyncValidationErrors().then(() => {
-                newUser = req.body;
-                newUser.verify_code = emailVerification.create(global.config.emailEncryptKey).encrypt(req.body.email);
-                newUser.isNew = true;
-
-                req.login = Promise.promisify(req.login);
-                return new UserModel(newUser).createUser()
-                    .then(result => {
-                        if (_.has(result, 'success') && _.has(result, 'extras.user') && !_.isEmpty(result.extras.user)) {
-                            logger.info("New account has been created");
-                            req.flash('success_messages', 'Your account has been created');
-                            MailService.sendWelcome(result.extras.user);
-                            return req.login(result.extras.user)
-                                .then(user => {
-                                    logger.info("User " + result.extras.user.username + " has been logged");
-                                    return res.redirect('/user/' + result.extras.user.username);
-                                });
-                        } else {
-                            throw new Error('Object \'user is\' empty');
-                        }
-                    })
-                    .catch(err => {
-                        throw new Error();
-                    })
-            }).catch(errors => {
-                _.each(errors, e => {
-                    req.flash('error_messages', e.msg);
+            req.asyncValidationErrors()
+                .then(() => {
+                    return emailVerification.create(global.config.emailEncryptKey);
+                })
+                .then(object => {
+                    return object.encrypt(req.body.email);
+                })
+                .then(code => {
+                    req.body.verify_code = code;
+                    req.body.isNew = true;
+                    return new UserModel(req.body).createUser();
+                })
+                .then(result => {
+                    MailService.sendWelcome(result.extras.user);
+                    req.login = Promise.promisify(req.login);
+                    logger.info("Новый пользователь успешно зарегистрирован");
+                    req.flash('success_messages', 'Регистрация успешно завершена!');
+                    return req.login(result.extras.user)
+                })
+                .then(() => {
+                    logger.info(`Пользователь ${req.user.username} успешно авторизирован!`);
+                    return res.redirect(`/user/${req.user.username}`);
+                })
+                .catch(err => {
+                    if (_.isArray(err)) {
+                        _.each(err, e => {
+                            req.flash('error_messages', e.msg);
+                            logger.warn("VALIDATOR: " + e.msg);
+                        });
+                    } else {
+                        logger.error(`ERROR: ${err.extras.msg}`);
+                    }
+                    return res.redirect('back');
                 });
-                return res.redirect('back');
-            });
         }
     } else {
         return res.render('signup', {
