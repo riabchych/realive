@@ -11,10 +11,10 @@ module.exports = {
         optional: false, // won't validate if field is empty
         isLength: {
             options: [{ min: 2, max: 10 }],
-            errorMessage: 'Must be between 2 and 10 chars long' // Error message for the validator, takes precedent over parameter message
+            errorMessage: 'Имя должно содержать не более 20 символов' // Error message for the validator, takes precedent over parameter message
         },
         isName: {
-            errorMessage: 'Invalid First Name'
+            errorMessage: 'Некорректное имя'
         }
 
     },
@@ -22,36 +22,36 @@ module.exports = {
         optional: false, // won't validate if field is empty
         isLength: {
             options: [{ min: 2, max: 10 }],
-            errorMessage: 'Must be between 2 and 10 chars long' // Error message for the validator, takes precedent over parameter message
+            errorMessage: 'Фамилия должна содержать не более 20 символов' // Error message for the validator, takes precedent over parameter message
         },
         isName: {
-            errorMessage: 'Invalid Last Name'
+            errorMessage: 'Некорректная фамилия'
         }
     },
     'email': {
         notEmpty: {
-            errorMessage: 'Missing E-Mail'
+            errorMessage: 'Вы не ввели E-mail'
         },
         isEmail: {
-            errorMessage: 'Invalid Email'
+            errorMessage: 'E-mail введен некорректно'
         },
         isEmailAvailable : {
-            errorMessage: 'The email address you have entered is already registered'
+            errorMessage: 'Введенный Вам E-mail уже зарегистрирован!'
         }
         
     },
     'password': {
         notEmpty: {
-            errorMessage: 'Password is required'
+            errorMessage: 'Введите пароль'
         },
         isLength: {
             options: [{ min: 6, max: 20 }],
-            errorMessage: 'Password must be between 2 and 20 chars long' // Error message for the validator, takes precedent over parameter message
+            errorMessage: 'Пароль должен содержать не более 20 символов' // Error message for the validator, takes precedent over parameter message
         },
     },
     'repassword': {
         notEmpty: {
-            errorMessage: 'Password Confirmation is required'
+            errorMessage: 'Пароли не совпадают'
         }
     }
 };
