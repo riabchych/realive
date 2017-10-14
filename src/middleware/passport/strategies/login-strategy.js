@@ -22,36 +22,28 @@ module.exports = passport => {
     }, (req, username, password, next) => {
         new UserModel({
                 email: username
-            }).userIsValid(username, password)
+            })
+            .userIsValid(username, password)
             .then(result => {
-                logger.info('Login is successfully');
+                logger.info('Авторизация прошла успешно!');
                 return next(result);
             })
             .catch(result => {
-                if (_.has(result, 'extras.msg')) {
-                    switch (result.extras.msg) {
-                        case ApiMessages.NOT_FOUND:
-                            logger.info(`User Not Found with login ${username}`);
-                            req.flash('error_messages', 'User Not Found.');
-                            return Promise.reject(result);
-                            break;
-                        case ApiMessages.INVALID_PWD:
-                            logger.info('Invalid Password');
-                            req.flash('error_messages', 'Invalid Password');
-                            return Promise.reject(result);
-                            break;
-                        default:
-                            logger.info('Internal Error');
-                            return Promise.reject(result);
-                            break;
-                    }
-                } else {
-                    logger.info('Internal Error');
-                    return Promise.reject(result);
+                switch (result.extras.msg) {
+                    case ApiMessages.NOT_FOUND:
+                        logger.info(`Пользователь с логином "${username}" не найден`);
+                        req.flash('error_messages', 'Пользователь не найден');
+                        break;
+                    case ApiMessages.INVALID_PWD:
+                        logger.info('Неправильный пароль');
+                        req.flash('error_messages', 'Неправильный пароль');
+                        break;
+                    default:
+                        logger.info('Неизвестная ошибка');
+                        req.flash('error_messages', 'Неизвестная ошибка');
+                        break;
                 }
-            })
-            .catch(err => {
-                next(err)
-            })
+                return next(result);
+            });
     }));
 };
