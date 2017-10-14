@@ -21,47 +21,29 @@ module.exports = (req, res, next) => {
                     emailVerification
                         .create(global.config.emailEncryptKey)
                         .then(obj => {
-                            if (obj) {
-                                return obj.decrypt(req.params.token);
-                            } else {
-                                throw new Error('Object is empty');
-                            }
+                            return obj.decrypt(req.params.token);
                         })
                         .then(email => {
-                            if (email) {
-                                return UserModel.findByEmail(email)
-                            } else {
-                                throw new Error('User has been deleted');
-                            }
+                            return UserModel.findByEmail(email)
                         })
-                        .then(user => {
-                            if (user) {
-                                return UserModel.confirmEmail(user.id);
-                            } else {
-                                throw new Error('Object "User" is empty');
-                            }
+                        .then(data => {
+                            return UserModel.confirmEmail(data.extras.user.id);
                         })
-                        .then(user => {
-                            if (user) {
-                                return res.render('email-confirmed');
-                                logger.info('Email address has been confirmed!');
-                            } else {
-                                throw new Error('Object "User" is empty');
-                            }
+                        .then(data => {
+                            logger.info('Адресс электронной почты успешно подтвержден!');
+                            return res.render('email-confirmed');
                         })
                         .catch(err => {
-                            logger.error(`ERROR: ${err}`);
+                            logger.error(`ERROR: ${err.extras.msg}`);
                             return res.redirect('/');
                         });
                 }
                 break;
             default:
-                logger.debug('Invalid action name');
                 return res.redirect('/');
                 break;
         }
     } else {
-        logger.debug('Invalid params');
         return res.redirect('/');
     }
 };
