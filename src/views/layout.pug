@@ -13,9 +13,11 @@ html(lang='en')
     link(rel='stylesheet', href='/stylesheets/style.min.css')
 
   block scripts
-    script(src='/javascripts/jquery-3.1.1.js')
+    //script(src='/javascripts/jquery-3.1.1.js')
     //script(src='/javascripts/lazyload-min.js')
-    script(src='/javascripts/core.js')
+    script(src='/javascripts/prototype.js')
+    script(src='/javascripts/lib.js')
+    script(src='/javascripts/profile.js')
 
   body
     #page-header
@@ -31,9 +33,9 @@ html(lang='en')
         nav#menu.f-right
           if (owner && owner.userName) 
             .dropdown
-              a.dropdown-toggle(onclick="app.profileMenu(this)", role='button', data-toggle='dropdown') #{owner.fullName}
+              a#profile-menu.noselect.dropdown-toggle(role='button', data-toggle='dropdown') #{owner.fullName}
                 b.caret
-              ul#profile-menu.dropdown-menu(role='menu', aria-labelledby='drop3')
+              ul.dropdown-menu(role='menu', aria-labelledby='drop3', style='display:none;')
                 li
                   a(tabindex='-1', href='/user/' + owner.userName) Профиль
                 li
