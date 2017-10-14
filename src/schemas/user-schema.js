@@ -28,7 +28,7 @@ module.exports = new mongoose.Schema({
         default: Date.now
     },
     'sex': {
-        type: String
+        type: Boolean
     },
     'photo': {
         type: String,
