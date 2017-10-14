@@ -4,10 +4,11 @@ block append scripts
   script(type='text/javascript').
       var profile = !{JSON.stringify(user)};
       var reviewItems = !{JSON.stringify(reviews)};
+      var core = !{JSON.stringify({csrfToken : decodeURIComponent(csrfToken)})};
 
 block content
   #profile-head.f-left
-    a#profile-image.big-profile-photo-envelope(href='/images/userpics/thumbs_m/' + user.photo, onclick='return app.profile.showPhoto(this)', title='Фотография профилия ' + user.fullName)
+    a#profile-image.big-profile-photo-envelope(href='/images/userpics/thumbs_m/' + user.photo, onclick='return core.showPhoto(this)', title='Фотография профилия ' + user.fullName)
       img(src='/images/userpics/thumbs_m/' + user.photo)
     #profile-info
       h2#profile-name #{user.fullName}
@@ -30,7 +31,7 @@ block content
         td.item
           span
             a(href='/reviews/' + (user.userName || user.id))
-              span.stat-digit= user.meta ? user.meta.numberOfReviews : 0
+              span#p-count-reviews.stat-digit= user.meta ? user.meta.numberOfReviews : 0
               span.stat-label Отзывов
     .profiles-block
         .title
@@ -56,10 +57,10 @@ block content
           button#follow-button.blue-button(onclick='app.profile.follow(this)') Подписаться
   #profile-wall.f-left
     if(!user.isOwner)
-      a#show-form-link.light-link.noselect(onclick='review.toggleForm(this)') Оставить отзыв о пользователе
-      #review-form-container
+      a#show-form-link.light-link.noselect Оставить отзыв о пользователе
+      #review-form-container(style='display:none;')
         h2.f-left Ваш отзыв о пользователе
-        a.f-right.noselect(onclick='review.toggleForm(this)')
+        a#hide-form-link.f-right.noselect
           small скрыть форму
         .clearfix
         form#review-form(method='POST', action='/review/new')
@@ -91,7 +92,7 @@ block content
       if(reviews && reviews.length > 0)
         each r in reviews
           if(!r.isPrivate)
-            article(class=r.isHidden ? 'review-hidden' : '')
+            article(id=`review-${r._id}` class=r.isHidden ? 'review-hidden' : '')
               .small-profile-photo-envelope.f-left
                 img(src=`/images/userpics/thumbs_s/${ r.from && 'photo' in r.from ? r.from.photo : 'no-avatar.gif' }`)
               .review-text
@@ -99,18 +100,18 @@ block content
                   time.f-right.timeago(datetime=(r.createdAt || ''))
                 p #{ r.body || '' }
               .review-details
-                .review-actions.f-right
-                  a.item.icon_delete(onclick=`app.review.remove('${r._id || 0}')`) Удалить
+                .review-actions.f-right(style='display:none;')
+                  if(user.isOwner)
+                    a.item.icon_delete(onclick=`core.review.remove('${r._id || 0}')`) Удалить
                   a.item.icon_reply(onclick="") Комментировать
-                  a.item.icon_like(onclick=`app.review.like('${r._id || 0}')`) Мне нравится
+                  a.item.icon_like(onclick=`core.review.like('${r._id || 0}')`) Мне нравится
               .clearfix
+        if(user.meta.numberOfReviews > 10)
+          a.light-link.noselect(onclick='return core.reviews.load(this)') Показать ещё
       else
-        if(user.reviewCount>10)
-          a.light-link.noselect(onclick='app.review.load(this)', data-locals.user=user.id) Показать ещё
-        else
-          p.default-text(style='margin: 5px 10px')
-            if(user && user.isOwner)
-              | О Вас ещё не оставляли отзывов
-            else
-              | О данном пользователе ещё никто не оставлял отзывов
+        p.default-text(style='margin: 5px 10px')
+          if(user.isOwner)
+            | О Вас ещё не оставляли отзывов
+          else
+            | О данном пользователе ещё никто не оставлял отзывов
     div.clearfix
