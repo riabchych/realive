@@ -18,56 +18,54 @@ let _ = require('lodash');
 module.exports = (req, res) => {
     let owner = req.user || {};
 
-    if (_.has(owner, '_doc.username') && _.has(req, 'params.username') && _.isEqual(owner.username, req.params.username)) {
+    if (req.isAuthenticated() && _.isEqual(owner.username, req.params.username)) {
         owner.isOwner = true;
-        logger.info('Rendering page of owner');
-        return ReviewModel.readReviews(owner.id).then(result => {
-            return renderProfile({
-                user: owner,
-                owner: owner,
-                reviews: result.extras.reviews
+        return ReviewModel
+            .readReviews(owner.id)
+            .then(result => {
+                return renderProfile({
+                    user: owner,
+                    owner: owner,
+                    reviews: result.extras.reviews
+                });
             });
-        });
     } else if (_.has(req, 'params.username') && !_.isEmpty(req.params.username)) {
+        let _data;
         new UserModel({
                 'username': req.params.username
-            }).readUser()
+            })
+            .readUser()
             .then(result => {
-                if (_.has(result, 'success') && _.has(result, 'extras.user') && !_.isEmpty(result.extras.user)) {
-                    result.extras.user.isOwner = false;
-                    return {
-                        user: result.extras.user,
-                        owner: owner
-                    };
-                } else {
-                    onError();
-                }
+                result.extras.user.isOwner = false;
+                return _data = {
+                    user: result.extras.user,
+                    owner: owner
+                };
             })
-            .then(data => {
-                return ReviewModel.readReviews(data.user.id).then(result => {
-                    data.reviews = result.extras.reviews;
-                    return data;
-                });
+            .then(result => {
+                return ReviewModel.readReviews(result.user.id)
             })
-            .then(data => {
-                return renderProfile(data);
+            .then(result => {
+                _data.reviews = result.extras.reviews;
+                return _data;
             })
-            .catch(onError);
+            .then(result => {
+                return renderProfile(result);
+            })
+            .catch(err => {
+                logger.error(`ERROR: ${err.extras.msg}`);
+                req.logout();
+                return res.redirect('/login');
+            });
     } else {
-        onError();
-    }
-
-    function onError(err) {
-        logger.error(err);
-        req.logout();
-        return res.redirect('/login');
+        return res.redirect('/');
     }
 
     function renderProfile(data) {
         logger.debug(`Rendering page of username ${data.user.username}`);
         data.user = !_.isEmpty(data.user) ? new UserProfile(data.user) : data.user;
         data.owner = !_.isEmpty(data.owner) ? new UserProfile(data.owner) : data.owner;
-        
+
         return res.render('profile', {
             title: data.user.fullName,
             user: data.user,
