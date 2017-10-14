@@ -67,13 +67,14 @@ Review.methods.createReview = function () {
     });
 };
 
-Review.statics.readReviews = function (id) {
+Review.statics.readReviews = function (id, skip = 0) {
     let self = this;
     return new Promise((resolve, reject) => {
         self.find({
                 to: id
             })
             .limit(10)
+            .skip(skip)
             .sort({
                 createdAt: -1
             })
@@ -84,7 +85,6 @@ Review.statics.readReviews = function (id) {
                     let reviews = [];
                     _.each(data, review => {
                         reviews.push(review);
-                        console.log(review);
                     });
 
                     return reviews;
@@ -104,9 +104,37 @@ Review.statics.readReviews = function (id) {
                         reviews: data
                     }
                 }));
-            }).catch(data => {
-                return reject(new Error(data));
             });
+    });
+};
+
+Review.statics.delete = function (uid, id) {
+    return new Promise((resolve, reject) => {
+        this.model('Review').remove({
+            _id: id,
+            to: uid
+        }).then((data) => {
+            if (!_.isEmpty(data) && data.result.ok) {
+                UserModel.incValue(uid, {
+                    'meta.numberOfReviews': -1
+                });
+                return id;
+            } else {
+                throw new ApiResponse({
+                    success: false,
+                    extras: {
+                        msg: ApiMessages.DB_ERROR
+                    }
+                });
+            }
+        }).then(id => {
+            return resolve(new ApiResponse({
+                success: true,
+                extras: {
+                    review_id: id
+                }
+            }));
+        });
     });
 };
 
