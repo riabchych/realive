@@ -1,0 +1,47 @@
+{
+  "name": "realive",
+  "version": "1.0.0",
+  "description": "Anonymous social network",
+  "scripts": {
+    "dev": "nodemon --exec \"babel-node\" index.js"
+  },
+  "author": {
+    "name": "Yevhenii Riabchych",
+    "url": "https://github.com/riabchych"
+  },
+  "dependencies": {
+    "bcrypt-nodejs": "0.0.3",
+    "bluebird": "^3.5.1",
+    "body-parser": "~1.15.1",
+    "connect-flash": "^0.1.1",
+    "cookie-parser": "~1.4.3",
+    "csurf": "^1.8.3",
+    "express": "^4.16.2",
+    "express-session": "^1.12.1",
+    "express-validator": "^2.20.5",
+    "lodash": "^4.17.4",
+    "method-override": "^2.3.5",
+    "mongoose": "^4.12.2",
+    "morgan": "^1.8.2",
+    "node-sass-middleware": "^0.11.0",
+    "node-uuid": "^1.4.7",
+    "nodemailer": "^4.2.0",
+    "passport": "^0.3.2",
+    "passport-local": "^1.0.0",
+    "pug": "^2.0.0-beta3",
+    "require-tree": "^1.1.1",
+    "serve-favicon": "^2.3.0",
+    "stack-trace": "0.0.10",
+    "winston": "^2.4.0"
+  },
+  "devDependencies": {
+    "babel-cli": "^6.26.0",
+    "babel-preset-env": "^1.6.0"
+  },
+  "repository": {
+    "type": "git",
+    "url": "git+https://github.com/riabchych/realive.git"
+  },
+  "homepage": "https://github.com/riabchych/realive#readme",
+  "license": "ISC"
+}

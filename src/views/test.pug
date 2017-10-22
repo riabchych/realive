@@ -1,0 +1,11 @@
+extends layout.pug
+
+block content
+  h2.title Подтверждение адресса электронной почты
+  .wrapped
+    article#welcome(style="padding:50px 0;text-align:center;")
+      p
+        img(src='/images/success.png' style='width: 75px;margin:0 auto 20px;display:block;')
+        b Адресс электронной почты успешно подтвержден!
+        form(action='/', method='GET')
+          input.blue-button(type='submit', value='На главную',style="display:block;margin:15px auto;padding: 5px 15px;")

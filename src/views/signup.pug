@@ -1,0 +1,31 @@
+extends layout.pug
+
+block content
+  .title
+    h3 Регистрация
+  .form
+    include ./partials/flash-messages.pug
+    form#signup-form(method='post', action='/signup')
+      input(type='hidden', name='_csrf', value=decodeURIComponent(csrfToken))
+      .row
+        label(for='user[name]') Имя и фамилия:
+        input.grey-input(type='text', id='user[name]', name='user[name]')
+      .row
+        label(for='user[email]') E-mail:
+        input.grey-input(type='text', id='user[email]', name='user[email]')
+      .row
+        label(for='user[password]') Пароль:
+        input.grey-input(type='password', id='user[password]', name='user[password]')
+      .row
+        label(for='user[repassword]') Пароль ещё раз:
+        input.grey-input(type='password', id='user[repassword]', name='user[repassword]')
+        //
+          <div class="row">
+          <label for="user[captcha]">Защитный код: </label>
+          <div class="captcha f-left">
+          <img src="/captcha.jpg" />
+          <input type="text" id="user[captcha]" class="grey-input" name="user[captcha]" />
+          </div>
+          </div>
+      .row.buttons
+        input.blue-button(type='submit', value='Регистрация')

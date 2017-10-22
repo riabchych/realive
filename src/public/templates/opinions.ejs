@@ -1,0 +1,29 @@
+<% if(opinions && opinions.length > 0) {%>
+	<% var isMore = opinions.length > 9 ? true : false; %>
+	<% opinions.forEach(function(item) { %>
+		<article id="opinion-<%=username +'-'+ item['timestamp']%>" <%=Number(item['hidden']) ? 'class="opinion-unknown"' : '' %>>
+			<div class="small-profile-photo-envelope f-left">
+				<img src="/images/userpics/thumbs_s/no-avatar.gif">
+			</div>
+			<div class="opinion-text">
+				<div class="opinion-info">
+					<%= Number(item['hidden']) ? '<b>РђРЅРѕРЅРёРј</b>' : '<a href="/' + item['from'] + '"><b>'+item['from']+'</b></a>' %>
+					<time datetime="<%= item['timestamp'] %>" class="f-right timeago"><%= item['timestamp'] %></time>
+				</div>
+				<%= item['text'] %>
+			</div>
+			<div class="opinion-details">
+				<div class="opinion-actions f-right">
+					<span class="item">Р­С‚Рѕ СЃРїР°Рј</span>
+					<% if(isAuthor) { %>
+						<a class="item" onclick="opinion.remove('<%= item['timestamp'] %>')">РЈРґР°Р»РёС‚СЊ</a>
+					<% }%>
+					<a class="item" onclick="">РљРѕРјРјРµРЅС‚РёСЂРѕРІР°С‚СЊ</a>
+					<a class="item" onclick="opinion.like('<%= item['timestamp'] %>')">РњРЅРµ РЅСЂР°РІРёС‚СЃСЏ</a>
+				</div>
+			</div>
+			
+			<div class="clearfix"></div>
+		</article>
+	<% });%>
+<% } %>

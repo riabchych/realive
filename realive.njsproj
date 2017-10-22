@@ -1,0 +1,232 @@
+﻿<?xml version="1.0" encoding="utf-8"?>
+<Project DefaultTargets="Build" xmlns="http://schemas.microsoft.com/developer/msbuild/2003">
+  <PropertyGroup>
+    <Configuration Condition=" '$(Configuration)' == '' ">Debug</Configuration>
+    <SchemaVersion>2.0</SchemaVersion>
+    <ProjectGuid>{50614efa-5c1d-4fb8-ae76-7ba4a4fd6306}</ProjectGuid>
+    <ProjectHome />
+    <ProjectView>ProjectFiles</ProjectView>
+    <StartupFile>index.js</StartupFile>
+    <WorkingDirectory>.</WorkingDirectory>
+    <OutputPath>.</OutputPath>
+    <ProjectTypeGuids>{3AF33F2E-1136-4D97-BBB7-1795711AC8B8};{349c5851-65df-11da-9384-00065b846f21};{9092AA53-FB77-4645-B42D-1CCCA6BD08BD}</ProjectTypeGuids>
+    <VisualStudioVersion Condition="'$(VisualStudioVersion)' == ''">14.0</VisualStudioVersion>
+    <VSToolsPath Condition="'$(VSToolsPath)' == ''">$(MSBuildExtensionsPath32)\Microsoft\VisualStudio\v$(VisualStudioVersion)</VSToolsPath>
+  </PropertyGroup>
+  <PropertyGroup Condition="'$(Configuration)' == 'Debug'" />
+  <PropertyGroup Condition="'$(Configuration)' == 'Release'" />
+  <ItemGroup>
+    <Content Include="logs\app.log" />
+    <Content Include="package-lock.json" />
+    <Content Include="package.json" />
+    <Compile Include="index.js" />
+    <Compile Include="src\app.js" />
+    <Compile Include="src\controllers\reviewCtrl.js" />
+    <Compile Include="src\error-handler.js" />
+    <Compile Include="src\models\review.js" />
+    <Compile Include="src\public\javascripts\core.js" />
+    <Compile Include="src\public\javascripts\core.min.js" />
+    <Compile Include="src\public\javascripts\dev\ajax.js" />
+    <Compile Include="src\public\javascripts\dev\base.js" />
+    <Compile Include="src\public\javascripts\dev\browser.js" />
+    <Compile Include="src\public\javascripts\dev\common.js" />
+    <Compile Include="src\public\javascripts\dev\core.js" />
+    <Compile Include="src\public\javascripts\dev\css.js" />
+    <Compile Include="src\public\javascripts\dev\dialogs.js" />
+    <Compile Include="src\public\javascripts\dev\dom.js" />
+    <Compile Include="src\public\javascripts\dev\domReady.js" />
+    <Compile Include="src\public\javascripts\dev\feed.js" />
+    <Compile Include="src\public\javascripts\dev\profile.js" />
+    <Compile Include="src\public\javascripts\dev\ui-controls.js" />
+    <Compile Include="src\public\javascripts\dev\uploader.js" />
+    <Compile Include="src\public\javascripts\jquery-3.1.1.js" />
+    <Compile Include="src\public\javascripts\lazyload-min.js" />
+    <Compile Include="src\routes.js" />
+    <Compile Include="src\schemas\review-schema.js">
+      <SubType>Code</SubType>
+    </Compile>
+    <Compile Include="src\schemas\user-schema.js">
+      <SubType>Code</SubType>
+    </Compile>
+    <Compile Include="src\schemas\validation\review-validation-schema.js">
+      <SubType>Code</SubType>
+    </Compile>
+    <Compile Include="test\test.js" />
+    <Content Include="src\public\favicon.ico" />
+    <Content Include="src\public\images\cross.png" />
+    <Content Include="src\public\images\done.png" />
+    <Content Include="src\public\images\gradient.png" />
+    <Content Include="src\public\images\icon_delete.png" />
+    <Content Include="src\public\images\icon_like.png" />
+    <Content Include="src\public\images\icon_reply.png" />
+    <Content Include="src\public\images\icon_unlike.png" />
+    <Content Include="src\public\images\background.jpg" />
+    <Content Include="src\public\images\me.jpg" />
+    <Content Include="src\public\images\load.gif" />
+    <Compile Include="public\javascripts\core.js" />
+    <Compile Include="public\javascripts\core.min.js" />
+    <Compile Include="public\javascripts\jquery-3.1.1.js" />
+    <Compile Include="public\javascripts\lazyload-min.js" />
+    <Content Include="public\stylesheets\reset.min.css" />
+    <Content Include="public\stylesheets\style.min.css" />
+    <Content Include="public\templates\opinions.ejs" />
+    <Content Include="src\public\images\userpics\no_avatar_female.png" />
+    <Content Include="src\public\images\userpics\no_avatar_male.png" />
+    <Content Include="src\public\images\userpics\thumbs\no_avatar_female.png" />
+    <Content Include="src\public\images\userpics\thumbs\no_avatar_male.png" />
+    <Content Include="src\public\images\userpics\thumbs_m\no_avatar_female.png" />
+    <Content Include="src\public\images\userpics\thumbs_m\no_avatar_male.png" />
+    <Content Include="src\public\images\userpics\thumbs_m\no-avatar.gif" />
+    <Content Include="src\public\images\userpics\thumbs_s\no_avatar_female.png" />
+    <Content Include="src\public\images\userpics\thumbs_s\no_avatar_male.png" />
+    <Content Include="src\public\images\userpics\thumbs_s\no-avatar.gif" />
+    <Compile Include="public\javascripts\dev\base.js" />
+    <Compile Include="public\javascripts\dev\browser.js" />
+    <Compile Include="public\javascripts\dev\common.js" />
+    <Compile Include="public\javascripts\dev\core.js" />
+    <Compile Include="public\javascripts\dev\css.js" />
+    <Compile Include="public\javascripts\dev\dialogs.js" />
+    <Compile Include="public\javascripts\dev\dom.js" />
+    <Compile Include="public\javascripts\dev\domReady.js" />
+    <Compile Include="public\javascripts\dev\ejs.min.js" />
+    <Compile Include="public\javascripts\dev\feed.js" />
+    <Compile Include="public\javascripts\dev\profile.js" />
+    <Compile Include="public\javascripts\dev\ui-controls.js" />
+    <Compile Include="public\javascripts\dev\uploader.js" />
+    <Content Include="public\stylesheets\dev\reset.css" />
+    <Content Include="public\stylesheets\dev\style.css" />
+    <Compile Include="config\api-messages.js" />
+    <Compile Include="config\api-response.js" />
+    <Compile Include="config\index.js" />
+    <Compile Include="src\controllers\editCtrl.js" />
+    <Compile Include="src\controllers\homeCtrl.js" />
+    <Compile Include="src\controllers\loginCtrl.js" />
+    <Compile Include="src\controllers\logoutCtrl.js" />
+    <Compile Include="src\controllers\profileCtrl.js" />
+    <Compile Include="src\controllers\signupCtrl.js" />
+    <Compile Include="src\errors\bad-request-error.js" />
+    <Compile Include="src\errors\data-import-error.js" />
+    <Compile Include="src\errors\email-error.js" />
+    <Compile Include="src\errors\index.js" />
+    <Compile Include="src\errors\internal-server-error.js" />
+    <Compile Include="src\errors\no-permission-error.js" />
+    <Compile Include="src\errors\not-found-error.js" />
+    <Compile Include="src\errors\request-too-large-error.js" />
+    <Compile Include="src\errors\unauthorized-error.js" />
+    <Compile Include="src\errors\unsupported-media-type-error.js" />
+    <Compile Include="src\errors\validation-error.js" />
+    <Compile Include="src\helpers\render.js" />
+    <Compile Include="src\middleware\account.js" />
+    <Compile Include="src\models\comment.js" />
+    <Compile Include="src\models\friends.js" />
+    <Compile Include="src\models\loginToken.js" />
+    <Compile Include="src\models\post.js" />
+    <Compile Include="src\models\user-logon.js" />
+    <Compile Include="src\models\user-profile.js" />
+    <Compile Include="src\models\user-pwd-reset-final.js" />
+    <Compile Include="src\models\user-pwd-reset.js" />
+    <Compile Include="src\models\user-registration.js" />
+    <Compile Include="src\models\user.js" />
+    <Compile Include="src\utils\basicMarkup.js" />
+    <Compile Include="src\utils\custom-validators.js" />
+    <Compile Include="src\utils\flash.js" />
+    <Compile Include="src\utils\logger.js" />
+    <Compile Include="src\utils\mustAuthenticatedMw.js" />
+    <Compile Include="src\utils\render.js" />
+    <Compile Include="src\schemas\validation\user-validation-schema.js" />
+    <Compile Include="src\utils\validator.js" />
+    <Content Include="src\public\stylesheets\dev\reset.css" />
+    <Content Include="src\public\stylesheets\dev\style.css" />
+    <Content Include="src\public\stylesheets\reset.min.css" />
+    <Content Include="src\public\stylesheets\style.min.css" />
+    <Content Include="src\public\templates\opinions.ejs" />
+    <Content Include="src\views\edit.pug" />
+    <Content Include="src\views\error.pug" />
+    <Content Include="src\views\home.pug" />
+    <Content Include="src\views\layout.pug" />
+    <Content Include="src\views\login.pug" />
+    <Content Include="src\views\profile.pug" />
+    <Content Include="src\views\signup.pug" />
+    <Compile Include="src\middleware\passport\init.js" />
+    <Compile Include="src\middleware\passport\strategies\login-strategy.js" />
+    <Content Include="src\views\partials\flash-messages.pug" />
+  </ItemGroup>
+  <ItemGroup>
+    <Folder Include="bin" />
+    <Folder Include="logs" />
+    <Folder Include="public\" />
+    <Folder Include="src\schemas\" />
+    <Folder Include="src\public\" />
+    <Folder Include="src\public\images\" />
+    <Folder Include="src\public\images\userpics\" />
+    <Folder Include="src\public\images\userpics\thumbs\" />
+    <Folder Include="src\public\images\userpics\thumbs_m\" />
+    <Folder Include="src\public\images\userpics\thumbs_s\" />
+    <Folder Include="public\javascripts" />
+    <Folder Include="public\javascripts\dev" />
+    <Folder Include="public\stylesheets" />
+    <Folder Include="public\stylesheets\dev" />
+    <Folder Include="public\templates" />
+    <Folder Include="src" />
+    <Folder Include="config\" />
+    <Folder Include="src\controllers" />
+    <Folder Include="src\errors" />
+    <Folder Include="src\helpers" />
+    <Folder Include="src\middleware" />
+    <Folder Include="src\middleware\passport" />
+    <Folder Include="src\middleware\passport\strategies" />
+    <Folder Include="src\models" />
+    <Folder Include="src\public\javascripts\" />
+    <Folder Include="src\public\javascripts\dev\" />
+    <Folder Include="src\public\stylesheets\" />
+    <Folder Include="src\public\stylesheets\dev\" />
+    <Folder Include="src\public\templates\" />
+    <Folder Include="src\schemas\validation\" />
+    <Folder Include="src\utils" />
+    <Folder Include="src\views" />
+    <Folder Include="src\views\partials" />
+    <Folder Include="test" />
+  </ItemGroup>
+  <Import Project="$(MSBuildToolsPath)\Microsoft.Common.targets" Condition="Exists('$(MSBuildExtensionsPath)\$(MSBuildToolsVersion)\Microsoft.Common.props')" />
+  <!--Do not delete the following Import Project.  While this appears to do nothing it is a marker for setting TypeScript properties before our import that depends on them.-->
+  <Import Project="$(MSBuildExtensionsPath32)\Microsoft\VisualStudio\v$(VisualStudioVersion)\TypeScript\Microsoft.TypeScript.targets" Condition="False" />
+  <Import Project="$(VSToolsPath)\Node.js Tools\Microsoft.NodejsTools.targets" />
+  <ProjectExtensions>
+    <VisualStudio>
+      <FlavorProperties GUID="{349c5851-65df-11da-9384-00065b846f21}">
+        <WebProjectProperties>
+          <UseIIS>False</UseIIS>
+          <AutoAssignPort>True</AutoAssignPort>
+          <DevelopmentServerPort>0</DevelopmentServerPort>
+          <DevelopmentServerVPath>/</DevelopmentServerVPath>
+          <IISUrl>http://localhost:48022/</IISUrl>
+          <NTLMAuthentication>False</NTLMAuthentication>
+          <UseCustomServer>True</UseCustomServer>
+          <CustomServerUrl>http://localhost:1337</CustomServerUrl>
+          <SaveServerSettingsInUserFile>False</SaveServerSettingsInUserFile>
+        </WebProjectProperties>
+      </FlavorProperties>
+      <FlavorProperties GUID="{349c5851-65df-11da-9384-00065b846f21}" User="">
+        <WebProjectProperties>
+          <StartPageUrl>
+          </StartPageUrl>
+          <StartAction>CurrentPage</StartAction>
+          <AspNetDebugging>True</AspNetDebugging>
+          <SilverlightDebugging>False</SilverlightDebugging>
+          <NativeDebugging>False</NativeDebugging>
+          <SQLDebugging>False</SQLDebugging>
+          <ExternalProgram>
+          </ExternalProgram>
+          <StartExternalURL>
+          </StartExternalURL>
+          <StartCmdLineArguments>
+          </StartCmdLineArguments>
+          <StartWorkingDirectory>
+          </StartWorkingDirectory>
+          <EnableENC>False</EnableENC>
+          <AlwaysStartWebServerOnDebug>False</AlwaysStartWebServerOnDebug>
+        </WebProjectProperties>
+      </FlavorProperties>
+    </VisualStudio>
+  </ProjectExtensions>
+</Project>

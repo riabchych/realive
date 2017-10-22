@@ -1,0 +1,117 @@
+﻿extends layout.pug
+
+block append scripts
+  script(type='text/javascript').
+      var profile = !{JSON.stringify(user)};
+      var reviewItems = !{JSON.stringify(reviews)};
+      var core = !{JSON.stringify({csrfToken : decodeURIComponent(csrfToken)})};
+
+block content
+  #profile-head.f-left
+    a#profile-image.big-profile-photo-envelope(href='/images/userpics/thumbs_m/' + user.photo, onclick='return core.showPhoto(this)', title='Фотография профилия ' + user.fullName)
+      img(src='/images/userpics/thumbs_m/' + user.photo)
+    #profile-info
+      h2#profile-name #{user.fullName}
+      #profile-activities #{user.about}
+      if(user.website)
+        div#profile-website
+          a(href=user.website) !{user.website}
+    table#mini-profile-stats
+      tr
+        td.item
+          span
+            a(href='/following/' + (user.userName || user.id))
+              span.stat-digit= user.meta ? user.meta.numberOfSubscriptions : 0
+              span.stat-label Читает
+        td.item.middle
+          span
+            a(href='/followers/' + (user.userName || user.id))
+              span.stat-digit= user.meta ? user.meta.numberOfFollowers : 0
+              span.stat-label Подписчиков
+        td.item
+          span
+            a(href='/reviews/' + (user.userName || user.id))
+              span#p-count-reviews.stat-digit= user.meta ? user.meta.numberOfReviews : 0
+              span.stat-label Отзывов
+    .profiles-block
+        .title
+          h3.f-left Читает 
+          a.f-right.noselect(href='/following/' + (user.userName || user.id)) показать ещё
+          .clearfix
+        .profile-envelope-wrap
+          if(followingUsers && followingUsers.length)
+            each item in followingUsers
+              a(href='/user/'+ (item['username'] || item['id'])).profile-cell.f-left
+                .small-profile-photo-envelope
+                  img(src='/images/userpics/thumbs_m/thumbnail/' + item['photo'])
+                .profile-name item
+              .clearfix
+          else
+            p.default-text(style="margin: 5px 10px") #{user.isOwner ? 'Вы никого не читаетe' : user.fullName + ' никого не читает'}
+    if(!user.isOwner)
+      #actions
+        if(user.isFollowing) 
+          .notice Вы подписаны на данного пользователя
+          button#follow-button.blue-button(onclick='app.profile.unfollow(this)') Отписаться
+        else
+          button#follow-button.blue-button(onclick='app.profile.follow(this)') Подписаться
+  #profile-wall.f-left
+    if(!user.isOwner)
+      a#show-form-link.light-link.noselect Оставить отзыв о пользователе
+      #review-form-container(style='display:none;')
+        h2.f-left Ваш отзыв о пользователе
+        a#hide-form-link.f-right.noselect
+          small скрыть форму
+        .clearfix
+        form#review-form(method='POST', action='/review/new')
+          input(type='hidden', name='review[to]', value=user.id)
+          input(type='hidden', name='_csrf', value=decodeURIComponent(csrfToken))
+          textarea#review-text(name='review[text]')
+          .review-options.noselect
+            span#review-word-counter 500
+            input.blue-button(type='submit', value='Отправить')
+            .action-divider
+              span.custom-checkbox
+                input#review_public(type='checkbox', name='review[isPrivate]')
+                span.box
+                  span.tick
+              label(for='review_public') Приватно
+            if (owner && owner.userName)
+              .action-divider
+                span.custom-checkbox
+                  input#review_type(type='checkbox', name='review[isHidden]', checked)
+                  span.box
+                    span.tick
+                label(for='review_type') Анонимно
+            .clearfix
+    #wall-options.title
+      h3#wall-title.f-left
+      a#hide-annonymous.f-right.noselect
+      .clearfix
+    section#profile-reviews
+      if(reviews && reviews.length > 0)
+        each r in reviews
+          if(!r.isPrivate)
+            article(id=`review-${r._id}` class=r.isHidden ? 'review-hidden' : '')
+              .small-profile-photo-envelope.f-left
+                img(src=`/images/userpics/thumbs_s/${ r.from && 'photo' in r.from ? r.from.photo : 'no-avatar.gif' }`)
+              .review-text
+                .review-info !{r.from && 'name' in r.from && !r.isHidden ? `<a href="/user/${r.from.username}"><b>${r.from.name.first}  ${r.from.name.last}</b></a>` : `<b>Анноним</b>`}
+                  time.f-right.timeago(datetime=(r.createdAt || ''))
+                p #{ r.body || '' }
+              .review-details
+                .review-actions.f-right(style='display:none;')
+                  if(user.isOwner)
+                    a.item.icon_delete(onclick=`core.review.remove('${r._id || 0}')`) Удалить
+                  a.item.icon_reply(onclick="") Комментировать
+                  a.item.icon_like(onclick=`core.review.like('${r._id || 0}')`) Мне нравится
+              .clearfix
+        if(user.meta.numberOfReviews > 10)
+          a.light-link.noselect(onclick='return core.reviews.load(this)') Показать ещё
+      else
+        p.default-text(style='margin: 5px 10px')
+          if(user.isOwner)
+            | О Вас ещё не оставляли отзывов
+          else
+            | О данном пользователе ещё никто не оставлял отзывов
+    div.clearfix

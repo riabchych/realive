@@ -1,0 +1,28 @@
+﻿extends layout.pug
+
+block content
+  .title
+    h3 Вход
+  .form.wrapped-form
+    include ./partials/flash-messages.pug
+    form#login-form(method='post', action='/login')
+      input(type='hidden', name='_csrf', value=decodeURIComponent(csrfToken))
+      .row
+        label(for='username') Логин:
+        input#username.grey-input(type='text', name='username')
+      .row
+        label(for='password') Пароль:
+        input#password.grey-input(type='password', name='password')
+      .row.buttons
+        input.blue-button(type='submit', value='Войти')
+        .additional-links
+          .remember-me
+            .custom-checkbox
+              input(type='checkbox', id='user[remember]', name='user[remember]')
+              span.box
+                span.tick
+            label.noselect(for='user[remember]') Запомнить меня
+            .clearfix
+          a(href='/signup') Регистрация
+          br
+          a(href='/recovery') Забыли пароль?
