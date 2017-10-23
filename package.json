@@ -1,7 +1,7 @@
 {
   "name": "realive",
   "version": "1.0.0",
-  "description": "Anonymous social network",
+  "description": "Feedback service",
   "scripts": {
     "dev": "nodemon --exec \"babel-node\" index.js"
   },
