@@ -1,7 +1,18 @@
-import winston from 'winston'
-winston.emitErrs = true
+//
+//  logger.js
+//  realive
+//
+//  Created by Yevhenii Riabchych on 2017-09-30.
+//  Copyright 2017 Yevhenii Riabchych. All rights reserved.
+//
 
-var logger = new winston.Logger({
+'use strict';
+
+import winston from 'winston'
+
+winston.emitErrs = true;
+
+let logger = new winston.Logger({
     transports: [
         new winston.transports.File({
             level: 'info',
@@ -15,11 +26,12 @@ var logger = new winston.Logger({
         new winston.transports.Console({level: 'debug', handleExceptions: true, json: false, colorize: true})
     ],
     exitOnError: false
-})
+});
 
-module.exports = logger
-module.exports.stream = {
-    write: function(message, encoding) {
+logger.__proto__.stream = {
+    write: function (message) {
         logger.info(message)
     }
-}
+};
+
+export default logger
