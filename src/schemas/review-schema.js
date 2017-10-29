@@ -6,9 +6,11 @@
 //  Copyright 2017 Yevhenii Riabchych. All rights reserved.
 //
 
+'use strict';
+
 import mongoose from 'mongoose'
 
-module.exports = new mongoose.Schema({
+export default new mongoose.Schema({
     to: {
         type: mongoose.Schema.Types.ObjectId,
         ref: 'User',
@@ -32,7 +34,7 @@ module.exports = new mongoose.Schema({
     },
     isHidden: {
         type: Boolean,
-        default: false
+        default: true
     },
     createdAt: {
         type: Date,
