@@ -6,9 +6,11 @@
 //  Copyright 2017 Yevhenii Riabchych. All rights reserved.
 //
 
+'use strict';
+
 import mongoose from 'mongoose'
 
-module.exports = new mongoose.Schema({
+export default new mongoose.Schema({
     'name': {
         'first': {
             type: String,

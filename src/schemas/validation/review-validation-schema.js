@@ -6,7 +6,9 @@
 //  Copyright 2017 Yevhenii Riabchych. All rights reserved.
 //
 
-module.exports = {
+'use strict';
+
+export default {
     'to': {
         isMongoId: {
             errorMessage: 'Invalid to User ID'
@@ -47,4 +49,4 @@ module.exports = {
         }
 
     }
-}
+};

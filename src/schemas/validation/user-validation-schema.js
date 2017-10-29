@@ -6,7 +6,9 @@
 //  Copyright 2017 Yevhenii Riabchych. All rights reserved.
 //
 
-module.exports = {
+'use strict';
+
+export default {
      'name.first': { //
         optional: false, // won't validate if field is empty
         isLength: {
@@ -54,4 +56,4 @@ module.exports = {
             errorMessage: 'Пароли не совпадают'
         }
     }
-}
+};
