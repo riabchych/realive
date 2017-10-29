@@ -6,10 +6,12 @@
 //  Copyright 2017 Yevhenii Riabchych. All rights reserved.
 //
 
-let connectDomain = require("connect-domain");
-let cluster = require('cluster');
+'use strict';
 
-module.exports.set = function (app, instance) {
+import connectDomain from 'connect-domain'
+import cluster from 'cluster'
+
+export default (app) => {
 
     app.use(function (err, req, res, next) {
         if (err.code !== 'EBADCSRFTOKEN') return next(err);
@@ -19,13 +21,6 @@ module.exports.set = function (app, instance) {
             message: 'Session has expired or tampered with',
             error: err
         });
-    });
-
-    // catch 404 and forward to error handler
-    app.use(function (req, res, next) {
-        let err = new Error('Not Found');
-        err.status = 404;
-        next(err);
     });
 
     // error handlers
@@ -67,4 +62,6 @@ module.exports.set = function (app, instance) {
             process.exit(1);
         }
     });
+
+    return app;
 };
