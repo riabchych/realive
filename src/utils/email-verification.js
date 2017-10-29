@@ -6,36 +6,41 @@
 //  Copyright 2017 Yevhenii Riabchych. All rights reserved.
 //
 
-let crypto = require('crypto');
-let Promise = require("bluebird");
+'use strict';
 
-let EmailVerification = function (secret) {
-    this.cipher = crypto.createCipher('aes-256-cbc', secret);
-    this.decipher = crypto.createDecipher('aes-256-cbc', secret);
-};
+import crypto from 'crypto';
 
-EmailVerification.prototype.encrypt = function (text) {
-    return new Promise((resolve, reject) => {
-        let crypted = this.cipher.update(text, 'utf8', 'hex');
-        crypted += this.cipher.final('hex');
-        return resolve(crypted);
-    });
-};
+class EmailVerification {
+    constructor(secret) {
+        this.cipher = crypto.createCipher('aes-256-cbc', secret);
+        this.decipher = crypto.createDecipher('aes-256-cbc', secret);
+    }
 
-EmailVerification.prototype.decrypt = function (text) {
-    return new Promise((resolve, reject) => {
-        let dec = this.decipher.update(text, 'hex', 'utf8');
-        dec += this.decipher.final('utf8');
-        return resolve(dec);
-    });
-};
+    encrypt(text) {
+        return new Promise((resolve) => {
+            let crypted = this.cipher.update(text, 'utf8', 'hex');
+            crypted += this.cipher.final('hex');
+            return resolve(crypted);
+        });
+    }
 
-module.exports.create = function (secret) {
-    return new Promise((resolve, reject) => {
+    decrypt(text) {
+        return new Promise((resolve) => {
+            let dec = this.decipher.update(text, 'hex', 'utf8');
+            dec += this.decipher.final('utf8');
+            return resolve(dec);
+        });
+    }
+}
+
+export default EmailVerification;
+
+export function create(secret) {
+    return new Promise((resolve) => {
         if (!secret) {
             throw Error('secret key missing');
         } else {
             return resolve(new EmailVerification(secret));
         }
     });
-};
+}
