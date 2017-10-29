@@ -6,37 +6,33 @@
 //  Copyright 2017 Yevhenii Riabchych. All rights reserved.
 //
 
-import _ from 'lodash'
+'use strict';
+
 import logger from '../utils/logger'
+import config from '../config'
 import UserModel from '../models/user'
 import emailVerification from '../utils/email-verification.js'
 
-module.exports = (req, res, next) => {
-    if (_.isEqual(req.method, "GET") && _.has(req, 'params') && !_.isEmpty(req.params)) {
-        let action = req.params.action
-        switch (action) {
-            case 'confirm':
-                if (req.params.token) {
-                    emailVerification.create(global.config.emailEncryptKey).then(obj => {
-                        return obj.decrypt(req.params.token)
-                    }).then(email => {
-                        return UserModel.findByEmail(email)
-                    }).then(data => {
-                        return UserModel.confirmEmail(data.extras.user.id)
-                    }).then(data => {
-                        logger.info('Адресс электронной почты успешно подтвержден!')
-                        return res.render('email-confirmed')
-                    }).catch(err => {
-                        logger.error(`ERROR: ${err.extras.msg}`)
-                        return res.redirect('/')
-                    })
-                }
-                break
-            default:
+export default (req, res) => {
+    if (Object.is(req.method, 'GET') && Object.keys(req).includes('params') && req.params) {
+
+        if (Object.is(req.params.action, 'confirm') && req.params.token) {
+
+            return emailVerification.create(config.emailEncryptKey).then(obj => {
+                return obj.decrypt(req.params.token)
+            }).then(email => {
+                return UserModel.findByEmail(email)
+            }).then(data => {
+                return UserModel.confirmEmail(data.extras.user.id)
+            }).then(() => {
+                logger.info('Адресс электронной почты успешно подтвержден!');
+                return res.render('email-confirmed')
+            }).catch(err => {
+                logger.error(`ERROR: ${err.extras.msg}`);
                 return res.redirect('/')
-                break
+            })
         }
-    } else {
-        return res.redirect('/')
     }
+
+    return res.redirect('/')
 }
