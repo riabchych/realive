@@ -6,37 +6,36 @@
 //  Copyright 2017 Yevhenii Riabchych. All rights reserved.
 //
 
-import _ from 'lodash'
-import crypto from 'crypto'
-import Promise from 'bluebird'
+'use strict';
+
 import mongoose from 'mongoose'
 import convertBasicMarkup from '../utils/basic-markup'
 import Review from '../schemas/review-schema'
 import UserModel from './user'
-import ApiResponse from '../../config/api-response'
-import ApiMessages from '../../config/api-messages'
+import ApiResponse from '../config/api-response'
+import ApiMessages from '../config/api-messages'
 
-Review.virtual('id').get(function() {
+Review.virtual('id').get(function () {
     return mongoose.Types.ObjectId(this._id).str
-})
+});
 
-Review.virtual('bodyParsed').get(function() {
+Review.virtual('bodyParsed').get(function () {
     return convertBasicMarkup(this.body, true)
-})
+});
 
-Review.pre('update', function() {
+Review.pre('update', function () {
     this.update({}, {
         $set: {
             updatedAt: new Date()
         }
     })
-})
+});
 
-Review.methods.createReview = function() {
-    let self = this
+Review.methods.createReview = function () {
+    let self = this;
     return new Promise((resolve, reject) => {
         self.save().then(data => {
-            if (!_.isEmpty(data)) {
+            if (data) {
                 return data
             } else {
                 throw new ApiResponse({
@@ -47,7 +46,7 @@ Review.methods.createReview = function() {
                 })
             }
         }).then(data => {
-            UserModel.incValue(self.to, {'meta.numberOfReviews': 1})
+            UserModel.incValue(self.to, {'meta.numberOfReviews': 1});
             return data
         }).then(data => {
             return resolve(new ApiResponse({
@@ -60,29 +59,35 @@ Review.methods.createReview = function() {
             return reject(new Error(data))
         })
     })
-}
+};
 
-Review.statics.readReviews = function(id, skip = 0) {
-    let self = this
-    return new Promise((resolve, reject) => {
-        self.find({to: id}).limit(10).skip(skip).sort({createdAt: -1}).populate('from', 'name id photo username').exec().then((data, err) => {
-            if (_.isEmpty(err)) {
-                let reviews = []
-                _.each(data, review => {
-                    reviews.push(review)
-                })
-
-                return reviews
-            } else {
-                throw new ApiResponse({
-                    success: false,
-                    extras: {
-                        msg: ApiMessages.DB_ERROR
+Review.statics.readReviews = function (id, skip = 0) {
+    let self = this;
+    return new Promise((resolve) => {
+        self.find({to: id})
+            .limit(10)
+            .skip(skip)
+            .sort({createdAt: -1})
+            .populate('from', 'name id photo username')
+            .exec()
+            .then((data, err) => {
+                if (!err) {
+                    let reviews = [];
+                    for (const review of data) {
+                        reviews.push(review)
                     }
-                })
 
-            }
-        }).then(data => {
+                    return reviews
+                } else {
+                    throw new ApiResponse({
+                        success: false,
+                        extras: {
+                            msg: ApiMessages.DB_ERROR
+                        }
+                    })
+
+                }
+            }).then(data => {
             return resolve(new ApiResponse({
                 success: true,
                 extras: {
@@ -91,13 +96,13 @@ Review.statics.readReviews = function(id, skip = 0) {
             }))
         })
     })
-}
+};
 
-Review.statics.delete = function(uid, id) {
-    return new Promise((resolve, reject) => {
+Review.statics.delete = function (uid, id) {
+    return new Promise((resolve) => {
         this.model('Review').remove({_id: id, to: uid}).then((data) => {
-            if (!_.isEmpty(data) && data.result.ok) {
-                UserModel.incValue(uid, {'meta.numberOfReviews': -1})
+            if (data && data.result.ok) {
+                UserModel.incValue(uid, {'meta.numberOfReviews': -1});
                 return id
             } else {
                 throw new ApiResponse({
@@ -116,6 +121,6 @@ Review.statics.delete = function(uid, id) {
             }))
         })
     })
-}
+};
 
-module.exports = mongoose.model('Review', Review)
+export default mongoose.model('Review', Review)

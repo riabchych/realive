@@ -6,54 +6,58 @@
 //  Copyright 2017 Yevhenii Riabchych. All rights reserved.
 //
 
-import MailService from '../services/mailer-service'
+'use strict';
+
 import flashMessages from '../utils/flash'
 import UserProfile from '../models/user-profile'
 import ReviewModel from '../models/review'
 import UserModel from '../models/user'
 import logger from '../utils/logger'
 
-module.exports = (req, res) => {
-    let owner = req.user || {}
+export default (req, res) => {
+    let owner = req.user || {};
 
-    if (req.isAuthenticated() && owner.username == req.params.username) {
-        owner.isOwner = true
-        return ReviewModel.readReviews(owner.id).then(result => {
-            return renderProfile({user: owner, owner: owner, reviews: result.extras.reviews})
-        })
-    } else if (Object.keys(req.params).includes('username') && req.params.username.length !== -1 ) {
-        let _data
-        new UserModel({'username': req.params.username}).readUser().then(result => {
-            result.extras.user.isOwner = false
-            return _data = {
-                user: result.extras.user,
-                owner: owner
-            }
-        }).then(result => {
-            return ReviewModel.readReviews(result.user.id)
-        }).then(result => {
-            _data.reviews = result.extras.reviews
-            return _data
-        }).then(result => {
-            return renderProfile(result)
-        }).catch(err => {
-            console.log(err)
-            logger.error(`ERROR: ${err.extras.msg}`)
-            req.logout()
-            return res.redirect('/login')
-        })
-    } else {
-        return res.redirect('/')
+    if (req.isAuthenticated()) {
+        if (Object.is(owner.username, req.params.username)) {
+            owner.isOwner = true;
+            return ReviewModel.readReviews(owner.id).then(result => {
+                return renderProfile({
+                    user: owner, owner:
+                    owner, reviews:
+                    result.extras.reviews
+                })
+            })
+        }
+    } else if (Object.keys(req.params).includes('username')) {
+        if (req.params.username.length > 0) {
+            let tmpData;
+            return new UserModel({username: req.params.username}).readUser().then(result => {
+                result.extras.user.isOwner = false;
+                return tmpData = {
+                    user: result.extras.user,
+                    owner: owner
+                }
+            }).then(result => {
+                return ReviewModel.readReviews(result.user.id)
+            }).then(result => {
+                tmpData.reviews = result.extras.reviews;
+                return tmpData
+            }).then(result => {
+                return renderProfile(result)
+            }).catch(err => {
+                logger.error(`ERROR: ${err.extras.msg}`);
+                req.logout();
+                return res.redirect('/login')
+            })
+        }
     }
 
+    return res.redirect('/');
+
     function renderProfile(data) {
-        logger.debug(`Rendering page of username ${data.user.username}`)
-        data.user = Object.keys(data.user).length !== -1
-            ? new UserProfile(data.user)
-            : data.user
-        data.owner = Object.keys(data.owner).length !== -1
-            ? new UserProfile(data.owner)
-            : data.owner
+        logger.debug(`Rendering page of username ${data.user.username}`);
+        data.user = Object.keys(data.user).length > 0 ? new UserProfile(data.user) : data.user;
+        data.owner = Object.keys(data.owner).length > 0 ? new UserProfile(data.owner) : data.owner;
 
         return res.render('profile', {
             title: data.user.fullName,

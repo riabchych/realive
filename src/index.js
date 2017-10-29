@@ -7,7 +7,7 @@
 //
 
 import config from './config'
-import App from './src/app'
+import App from './app'
 
-let app = new App(config)
-app.run()
+let app = new App(config);
+app.run();

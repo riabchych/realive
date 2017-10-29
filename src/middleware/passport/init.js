@@ -6,22 +6,24 @@
 //  Copyright 2017 Yevhenii Riabchych. All rights reserved.
 //
 
+'use strict';
+
 import User from '../../models/user'
 import loginStrategy from './strategies/login-strategy'
 
-module.exports = passport => {
+export default passport => {
 
     passport.serializeUser((user, done) => {
-        console.log('serializing user: ')
-        console.log(user)
+        console.log('serializing user: ');
+        console.log(user);
         done(null, user)
-    })
+    });
 
     passport.deserializeUser((id, done) => {
         User.findById(id, function(err, user) {
             done(err, user)
         })
-    })
+    });
 
     loginStrategy(passport)
 }

@@ -6,4 +6,7 @@
 //  Copyright 2017 Yevhenii Riabchych. All rights reserved.
 //
 
-module.exports = (req, res, next) => {}
+'use strict';
+
+export default (req, res, next) => {
+}

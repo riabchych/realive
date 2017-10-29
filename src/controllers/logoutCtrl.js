@@ -6,10 +6,12 @@
 //  Copyright 2017 Yevhenii Riabchych. All rights reserved.
 //
 
+'use strict';
+
 import logger from '../utils/logger'
 
-module.exports = (req, res) => {
-    req.logout()
+export default (req, res) => {
+    req.logout();
+    res.redirect('/');
     logger.info('Session was destroyed!')
-    res.redirect('/')
 }
