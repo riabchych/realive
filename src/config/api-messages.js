@@ -6,7 +6,10 @@
 //  Copyright 2017 Yevhenii Riabchych. All rights reserved.
 //
 
-let ApiMessages = module.exports = function () { };
+'use strict';
+
+let ApiMessages = {};
+
 ApiMessages.EMAIL_NOT_FOUND = 0;
 ApiMessages.INVALID_PWD = 1;
 ApiMessages.DB_ERROR = 2;
@@ -20,3 +23,5 @@ ApiMessages.COULD_NOT_RESET_PASSWORD = 9;
 ApiMessages.PASSWORD_CONFIRM_MISMATCH = 10;
 ApiMessages.INVALID_USERNAME = 11;
 ApiMessages.INTERNAL_ERROR = 12;
+
+export default ApiMessages
