@@ -4,57 +4,68 @@
 //  
 //  Created by Yevhenii Riabchych on 2012-08-31.
 //  Copyright 2017 Yevhenii Riabchych. All rights reserved.
-// 
+//
 
-function FlashMessage(type, messages) {
-    this.type = type;
-    this.messages = typeof messages === 'string' ? [messages] : messages;
-}
+'use strict';
 
-FlashMessage.prototype = {
-    getIcon: function() {
+class FlashMessage {
+    constructor(type, messages) {
+        this.type = type;
+        this._messages = typeof messages === 'string' ? [messages] : messages;
+    }
+
+    get messages() {
+        return this._messages;
+    }
+
+    set messages(value) {
+        this._messages = value;
+    }
+
+    getIcon() {
         switch (this.type) {
             case 'info':
                 return 'ui-icon-info';
             case 'error':
                 return 'ui-icon-alert';
         }
-    },
+    }
 
-    getStateClass: function() {
+    getStateClass() {
         switch (this.type) {
             case 'info':
                 return 'success';
             case 'error':
                 return 'error';
         }
-    },
+    }
 
-    toHTML: function() {
-        let list = this.type == 'error' ? 'Пожалуйста, исправьте следующие ошибки:' : '';
+    toHTML() {
+        let list = this.type === 'error' ? 'Пожалуйста, исправьте следующие ошибки:' : '';
 
-        if (this.messages.length > 1 || this.type == 'error') {
+        if (this._messages.length > 1 || this.type === 'error') {
             list += '<ol>';
-            this.messages.forEach(function(msg) {
-                list += '<li>' + msg + '</li>';
-            });
+            for (const msg of this._messages) {
+                list += `<li>${msg}</li>`;
+            }
             list += '</ol>';
         }
         else {
-            list += this.messages.pop();
+            list += this._messages.pop();
         }
 
-        return '<div class="flash ' + this.getStateClass() + '">' + '<div>' + list + '</div>' + '</div>';
+        return `<div class="flash ${this.getStateClass()}"><div>${list}</div></div>`;
     }
-};
+}
 
-module.exports = function(req, res) {
+
+export default function (req) {
     let html = '';
-    ['error', 'info'].forEach(function(type) {
+    for (const type of ['error', 'info']) {
         let messages = req.flash(type);
         if (messages.length > 0) {
             html += new FlashMessage(type, messages).toHTML();
         }
-    });
+    }
     return html;
-};
+}
