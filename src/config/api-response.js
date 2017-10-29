@@ -6,7 +6,11 @@
 //  Copyright 2017 Yevhenii Riabchych. All rights reserved.
 //
 
-let ApiResponse = module.exports = function (cnf) {
-    this.success = cnf.success;
-    this.extras = cnf.extras;
-};
+'use strict';
+
+export default class {
+    constructor(cnf) {
+        this.success = cnf.success;
+        this.extras = cnf.extras
+    }
+}
