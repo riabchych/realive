@@ -5,9 +5,12 @@
 //  Created by Yevhenii Riabchych on 2017-09-30.
 //  Copyright 2017 Yevhenii Riabchych. All rights reserved.
 //
-function convertBasicMarkup(input, allowHtml) {
+
+'use strict';
+
+const convertBasicMarkup = (input, allowHtml) => {
     let strongRe = /[*]{2}([^*]+)[*]{2}/gm;
-    let emRe = /[*]{1}([^*]+)[*]{1}/gm;
+    let emRe = /[*]([^*]+)[*]{1}/gm;
     let linkRe = /\[([^\]]*)\]\(([^\)]*?)\)/gm;
     let nlRe = /\r\n/gm;
     let crRe = /\r/gm;
@@ -34,11 +37,11 @@ function convertBasicMarkup(input, allowHtml) {
     input = input.replace(/\n/gm, '<br />');
 
     // replace basic markup
-    input = input.replace(strongRe, function (whole, m1, m2, m3) {
+    input = input.replace(strongRe, function (whole, m1) {
         return '<strong>' + m1 + '</strong>';
     });
 
-    input = input.replace(emRe, function (whole, m1, m2, m3) {
+    input = input.replace(emRe, function (whole, m1) {
         return '<em>' + m1 + '</em>';
     });
 
@@ -56,6 +59,6 @@ function convertBasicMarkup(input, allowHtml) {
     });
 
     return input;
-}
+};
 
-module.exports = convertBasicMarkup;
+export default convertBasicMarkup;
