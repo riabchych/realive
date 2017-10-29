@@ -6,7 +6,9 @@
 //  Copyright 2017 Yevhenii Riabchych. All rights reserved.
 //
 
-module.exports = (req, res) => {
+'use strict';
+
+export default (req, res) => {
     res.render("home", {
         locals: {
             title: "Home"
