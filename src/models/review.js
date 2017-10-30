@@ -10,6 +10,7 @@
 
 import mongoose from 'mongoose'
 import convertBasicMarkup from '../utils/basic-markup'
+import checkData from '../utils/check-data'
 import Review from '../schemas/review-schema'
 import UserModel from './user'
 import ApiResponse from '../config/api-response'
@@ -34,18 +35,7 @@ Review.pre('update', function () {
 Review.methods.createReview = function () {
     let self = this;
     return new Promise((resolve, reject) => {
-        self.save().then(data => {
-            if (data) {
-                return data
-            } else {
-                throw new ApiResponse({
-                    success: false,
-                    extras: {
-                        msg: ApiMessages.DB_ERROR
-                    }
-                })
-            }
-        }).then(data => {
+        self.save().then(checkData).then(data => {
             UserModel.incValue(self.to, {'meta.numberOfReviews': 1});
             return data
         }).then(data => {
@@ -56,7 +46,12 @@ Review.methods.createReview = function () {
                 }
             }))
         }).catch(data => {
-            return reject(new Error(data))
+            return reject(new ApiResponse({
+                success: false,
+                extras: {
+                    msg: ApiMessages.DB_ERROR
+                }
+            }))
         })
     })
 };
@@ -70,23 +65,13 @@ Review.statics.readReviews = function (id, skip = 0) {
             .sort({createdAt: -1})
             .populate('from', 'name id photo username')
             .exec()
-            .then((data, err) => {
-                if (!err) {
-                    let reviews = [];
-                    for (const review of data) {
-                        reviews.push(review)
-                    }
-
-                    return reviews
-                } else {
-                    throw new ApiResponse({
-                        success: false,
-                        extras: {
-                            msg: ApiMessages.DB_ERROR
-                        }
-                    })
-
+            .then(checkData).then(data => {
+                let reviews = [];
+                for (const review of data) {
+                    reviews.push(review)
                 }
+
+                return reviews
             }).then(data => {
             return resolve(new ApiResponse({
                 success: true,
@@ -99,18 +84,18 @@ Review.statics.readReviews = function (id, skip = 0) {
 };
 
 Review.statics.delete = function (uid, id) {
-    return new Promise((resolve) => {
-        this.model('Review').remove({_id: id, to: uid}).then((data) => {
-            if (data && data.result.ok) {
+    return new Promise((resolve, reject) => {
+        this.model('Review').remove({_id: id, to: uid}).then(checkData).then(data => {
+            if (data.result.ok) {
                 UserModel.incValue(uid, {'meta.numberOfReviews': -1});
                 return id
             } else {
-                throw new ApiResponse({
+                return reject(new ApiResponse({
                     success: false,
                     extras: {
                         msg: ApiMessages.DB_ERROR
                     }
-                })
+                }))
             }
         }).then(id => {
             return resolve(new ApiResponse({
