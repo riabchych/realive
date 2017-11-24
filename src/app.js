@@ -29,23 +29,9 @@ import logger from './utils/logger'
 
 const MongoStore = connectMongo(session)
 
-class Events {
+class AppListeners {
   constructor (port) {
-    this.port = Events.normalizePort(port)
-  }
-
-  static normalizePort (val) {
-    const port = parseInt(val, 10)
-
-    if (isNaN(port)) {
-      return val
-    }
-
-    if (port >= 0) {
-      return port
-    }
-
-    return false
+    this.port = AppUtils.normalizePort(port)
   }
 
   onListening () {
@@ -65,19 +51,36 @@ class Events {
     switch (error.code) {
       case 'EACCES':
         logger.error(bind + ' requires elevated privileges')
-        process.exit(1)
+        break
       case 'EADDRINUSE':
         logger.error(bind + ' is already in use')
-        process.exit(1)
+        break
       default:
         throw error
     }
+    process.exit(1)
   }
 }
 
-class App extends Events {
+class AppUtils {
+  static normalizePort (val) {
+    const port = parseInt(val, 10)
+
+    if (isNaN(port)) {
+      return val
+    }
+
+    if (port >= 0) {
+      return port
+    }
+
+    return false
+  }
+}
+
+class App {
   constructor (config, port = process.env.PORT || '8080') {
-    super(port)
+    this.port = port
     this.init(config)
   }
 
@@ -106,7 +109,7 @@ class App extends Events {
     this.app.use(bodyParser.json())
     this.app.use(bodyParser.urlencoded({extended: true}))
     mongoose.Promise = global.Promise
-    mongoose.connection.on('open', ref => {
+    mongoose.connection.on('open', () => {
       logger.info('Connected to mongo server.')
 
       let sessionStore = new MongoStore(
@@ -152,9 +155,10 @@ class App extends Events {
         cookieParser: cookieParser
       }))
 
+      let appListeners = new AppListeners(this.port)
+      this.server.on('listening', appListeners.onListening.bind(this))
+      this.server.on('error', appListeners.onError.bind(this))
       this.server.listen(this.port)
-      this.server.on('listening', this.onListening.bind(this))
-      this.server.on('error', this.onError.bind(this))
     })
 
     mongoose.connection.on('error', err => {
