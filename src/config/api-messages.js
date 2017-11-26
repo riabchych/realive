@@ -23,5 +23,6 @@ ApiMessages.COULD_NOT_RESET_PASSWORD = 9
 ApiMessages.PASSWORD_CONFIRM_MISMATCH = 10
 ApiMessages.INVALID_USERNAME = 11
 ApiMessages.INTERNAL_ERROR = 12
+ApiMessages.BAD_REQUEST = 13
 
 export default ApiMessages
