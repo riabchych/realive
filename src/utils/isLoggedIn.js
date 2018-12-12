@@ -6,8 +6,8 @@
 //  Copyright 2017 Yevhenii Riabchych. All rights reserved.
 //
 
-'use strict';
+'use strict'
 
 export default function (req, res, next) {
-    return req.isAuthenticated() ? next() : res.redirect('/login');
+  return req.isAuthenticated() ? next() : res.redirect('/login')
 }

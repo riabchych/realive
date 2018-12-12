@@ -6,7 +6,7 @@
 //  Copyright 2017 Yevhenii Riabchych. All rights reserved.
 //
 
-'use strict';
+'use strict'
 
 export default (req, res, next) => {
 }
