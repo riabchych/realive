@@ -19,7 +19,7 @@ import emailCtrl from './controllers/emailCtrl'
 import logoutCtrl from './controllers/logoutCtrl'
 import reviewCtrl from './controllers/reviewCtrl'
 
-const router = express.Router();
+let router = express.Router();
 
 // Basic routes
 router.get('/', homeCtrl);
@@ -41,7 +41,7 @@ router.get('/user/:username', profileCtrl);
 router.get('/user/email/:action/:token', emailCtrl);
 
 // Review controllers
-//router.post('/review/:action', reviewCtrl);
+router.post('/review/:action', reviewCtrl);
 //router.post('/review/get/:review', isLoggedIn, reviewCtrl);
 //router.post('/review/list', isLoggedIn, reviewCtrl);
 

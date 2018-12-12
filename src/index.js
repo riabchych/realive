@@ -6,9 +6,8 @@
 //  Copyright 2017 Yevhenii Riabchych. All rights reserved.
 //
 
-'use strict'
-
-import App from './app'
 import config from './config'
+import App from './app'
 
-const app = new App(config)
+let app = new App(config);
+app.run();

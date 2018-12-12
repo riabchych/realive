@@ -6,11 +6,11 @@
 //  Copyright 2017 Yevhenii Riabchych. All rights reserved.
 //
 
-'use strict'
+'use strict';
 
 export default class {
-  constructor (cnf) {
-    this.success = cnf.success
-    this.extras = cnf.extras
-  }
+    constructor(cnf) {
+        this.success = cnf.success;
+        this.extras = cnf.extras
+    }
 }
