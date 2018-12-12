@@ -6,18 +6,19 @@
 //  Copyright 2017 Yevhenii Riabchych. All rights reserved.
 //
 
-'use strict'
+'use strict';
 
 import nodemailer from 'nodemailer'
+import Promise from 'bluebird'
 import config from './index'
 
-const transporter = nodemailer.createTransport({
-  host: config.mailer.host,
-  port: config.mailer.port,
-  auth: {
-    user: config.mailer.auth.user,
-    pass: config.mailer.auth.pass,
-  },
-})
+let transporter = nodemailer.createTransport({
+    host: config.mailer.host,
+    port: config.mailer.port,
+    auth: {
+        user: config.mailer.auth.user,
+        pass: config.mailer.auth.pass
+    }
+});
 
-export default transporter
+export default Promise.promisifyAll(transporter)

@@ -6,56 +6,56 @@
 //  Copyright 2017 Yevhenii Riabchych. All rights reserved.
 //
 
-'use strict'
+'use strict';
 
 import mongoose from 'mongoose'
 
 export default new mongoose.Schema({
-  to: {
-    type: mongoose.Schema.Types.ObjectId,
-    ref: 'User',
-    required: true
-  },
-  from: {
-    type: mongoose.Schema.Types.ObjectId,
-    ref: 'User'
-  },
-  toReview: {
-    type: mongoose.Schema.Types.ObjectId,
-    ref: 'Review'
-  },
-  body: {
-    type: String,
-    trim: true
-  },
-  isPrivate: {
-    type: Boolean,
-    default: false
-  },
-  isHidden: {
-    type: Boolean,
-    default: true
-  },
-  createdAt: {
-    type: Date,
-    default: Date.now
-  },
-  updatedAt: {
-    type: Date,
-    default: Date.now
-  },
-  unread: {
-    type: Boolean,
-    default: false
-  },
-  meta: {
-    numberOfLikes: {
-      Number,
-      default: 0
+    to: {
+        type: mongoose.Schema.Types.ObjectId,
+        ref: 'User',
+        required: true
     },
-    numberOfComments: {
-      Number,
-      default: 0
+    from: {
+        type: mongoose.Schema.Types.ObjectId,
+        ref: 'User'
+    },
+    toReview: {
+        type: mongoose.Schema.Types.ObjectId,
+        ref: 'Review'
+    },
+    body: {
+        type: String,
+        trim: true
+    },
+    isPrivate: {
+        type: Boolean,
+        default: false
+    },
+    isHidden: {
+        type: Boolean,
+        default: true
+    },
+    createdAt: {
+        type: Date,
+        default: Date.now
+    },
+    updatedAt: {
+        type: Date,
+        default: Date.now
+    },
+    unread: {
+        type: Boolean,
+        default: false
+    },
+    meta: {
+        numberOfLikes: {
+            Number,
+            default: 0
+        },
+        numberOfComments: {
+            Number,
+            default: 0
+        }
     }
-  }
 })

@@ -6,12 +6,12 @@
 //  Copyright 2017 Yevhenii Riabchych. All rights reserved.
 //
 
-'use strict'
+'use strict';
 
 export default (req, res) => {
-  res.render('home', {
-    locals: {
-      title: 'Home'
-    }
-  })
+    res.render("home", {
+        locals: {
+            title: "Home"
+        }
+    })
 }
